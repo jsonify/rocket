@@ -24,7 +24,7 @@ albedo_color = Color(0.180392, 0, 1, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i12aq"]
 albedo_color = Color(0.172104, 0.626135, 1.92523e-07, 1)
 
-[node name="Level" type="Node3D"]
+[node name="Level" type="Node3D" groups=["Hazard"]]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_qm4d4")
@@ -33,7 +33,7 @@ environment = SubResource("Environment_qm4d4")
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Floor" type="CSGBox3D" parent="."]
+[node name="Ground" type="CSGBox3D" parent="." groups=["Hazard"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4, 0)
 use_collision = true
 size = Vector3(30, 8, 5)
@@ -41,11 +41,13 @@ material = SubResource("StandardMaterial3D_w821q")
 
 [node name="LaunchPad" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.25, 0)
+use_collision = true
 size = Vector3(2, 0.5, 2)
 material = SubResource("StandardMaterial3D_yh0qi")
 
-[node name="LandingPad" type="CSGBox3D" parent="."]
+[node name="LandingPad" type="CSGBox3D" parent="." groups=["Goal"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.25, 0)
+use_collision = true
 size = Vector3(2, 0.5, 2)
 material = SubResource("StandardMaterial3D_i12aq")
 
@@ -54,3 +56,4 @@ transform = Transform3D(1, 0, 0, 0, 0.978148, 0.207912, 0, -0.207912, 0.978148, 
 
 [node name="Player" parent="." instance=ExtResource("1_mu2pi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 1.7, 0)
+thrust = 3639.28
