@@ -14,7 +14,7 @@ albedo_color = Color(0.172104, 0.626135, 1.92523e-07, 1)
 
 [node name="Ground" parent="." instance=ExtResource("1_suiyt")]
 
-[node name="LaunchPad" type="CSGBox3D" parent="."]
+[node name="LaunchPad" type="CSGBox3D" parent="." groups=["LaunchPad"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.25, 0)
 use_collision = true
 size = Vector3(2, 0.5, 2)
