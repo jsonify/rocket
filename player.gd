@@ -27,6 +27,7 @@ func _process(delta: float) -> void:
 	handle_input(delta)
 
 func handle_input(delta):
+	# thrust
 	if Input.is_action_pressed("thrust"):
 		if can_restart_rotor and not rotors_active:
 			start_rotor()
@@ -34,26 +35,40 @@ func handle_input(delta):
 		booster_particles.emitting = true
 	else:
 		booster_particles.emitting = false
-
 	
+	# reverse direction
+	if Input.is_action_just_pressed("reverse_direction"):
+		reverse_helicopter()
+	
+	# backwards
 	if Input.is_action_pressed("backwards"):
 		apply_torque(Vector3(0.0, 0.0, torque_thrust * delta))
 		right_booster_particles.emitting = true
 	else:
 		right_booster_particles.emitting = false
 
+	# forward
 	if Input.is_action_pressed("forward"):
 		apply_torque(Vector3(0.0, 0.0, -torque_thrust * delta))
 		left_booster_particles.emitting = true
 	else:
 		left_booster_particles.emitting = false
 
+	# restart level
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
 	
 
+var is_reversed := false
+
 func rotate_rotors(delta: float):
 	rotor.rotate_y(delta * rotor_speed)
+
+func reverse_helicopter():
+	is_reversed = not is_reversed
+	var target_rotation = PI if is_reversed else 0
+	var tween = create_tween()
+	tween.tween_property(helicoptor_body, "rotation:y", target_rotation, 0.5)
 
 func stop_rotors(delta):
 	pass
