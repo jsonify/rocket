@@ -20,7 +20,7 @@ ambient_light_source = 3
 tonemap_mode = 2
 glow_enabled = true
 
-[node name="Ground" type="CSGBox3D" groups=["Hazard"]]
+[node name="Ground" type="CSGBox3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4, 0)
 material_override = ExtResource("1_ykpem")
 use_collision = true

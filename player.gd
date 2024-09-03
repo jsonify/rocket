@@ -21,7 +21,13 @@ func _ready():
 	print("Initial rotor Y rotation: ", initial_rotor_y_rotation)
 
 func _process(delta: float) -> void:
-	if Input.is_action_pressed("boost"):
+	if rotors_active:
+		rotate_rotors(delta)
+		
+	handle_input(delta)
+
+func handle_input(delta):
+	if Input.is_action_pressed("thrust"):
 		if can_restart_rotor and not rotors_active:
 			start_rotor()
 		apply_central_force(basis.y * delta * thrust)
@@ -29,16 +35,14 @@ func _process(delta: float) -> void:
 	else:
 		booster_particles.emitting = false
 
-	if rotors_active:
-		rotate_rotors(delta)
-
-	if Input.is_action_pressed("rotate_left"):
+	
+	if Input.is_action_pressed("backwards"):
 		apply_torque(Vector3(0.0, 0.0, torque_thrust * delta))
 		right_booster_particles.emitting = true
 	else:
 		right_booster_particles.emitting = false
 
-	if Input.is_action_pressed("rotate_right"):
+	if Input.is_action_pressed("forward"):
 		apply_torque(Vector3(0.0, 0.0, -torque_thrust * delta))
 		left_booster_particles.emitting = true
 	else:
@@ -46,6 +50,7 @@ func _process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
+	
 
 func rotate_rotors(delta: float):
 	rotor.rotate_y(delta * rotor_speed)
@@ -59,7 +64,7 @@ func _on_body_entered(body: Node) -> void:
 			complete_level(body.file_path)
 		if "Hazard" in body.get_groups():
 			crash_sequence()
-		if "LaunchPad" in body.get_groups():
+		if "SafeLanding" in body.get_groups():
 			land()
 
 func crash_sequence():
