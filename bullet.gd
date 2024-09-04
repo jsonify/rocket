@@ -32,3 +32,7 @@ func _physics_process(delta: float) -> void:
 			print("Bullet hit something else: ", collider.name)
 	
 	global_position += velocity * delta
+
+
+func _on_timer_timeout() -> void:
+	queue_free()

@@ -26,3 +26,8 @@ shape = SubResource("ConvexPolygonShape3D_ossd8")
 [node name="BoosterParticles" parent="." instance=ExtResource("2_c6um8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 visible = false
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
