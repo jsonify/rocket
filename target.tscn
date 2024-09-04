@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://47fcgf02oqoa"]
+
+[ext_resource type="Script" path="res://target.gd" id="1_53nu4"]
+[ext_resource type="Texture2D" uid="uid://vs2g3tx6l8y6" path="res://target-logo.svg" id="1_uuigt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hnhi6"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_n7q5o"]
+lightmap_size_hint = Vector2i(9, 21)
+material = SubResource("StandardMaterial3D_hnhi6")
+size = Vector3(0.14, 1, 1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_0boje"]
+points = PackedVector3Array(0.0807936, -0.507937, -0.507937, 0.0807781, 0.507937, 0.507937, 0.0807781, 0.507937, -0.507937, -0.07, -0.457143, 0.457143, -0.07, 0.457143, -0.457143, 0.0807936, -0.507937, 0.507937, -0.07, -0.457143, -0.457143, -0.07, 0.457143, 0.457143)
+
+[node name="Target" type="Node3D"]
+script = ExtResource("1_53nu4")
+
+[node name="Box" type="MeshInstance3D" parent="." groups=["object"]]
+mesh = SubResource("BoxMesh_n7q5o")
+
+[node name="Decal" type="Decal" parent="Box"]
+transform = Transform3D(-1.96701e-08, -0.45, 0, 0.45, -1.96701e-08, 0, 0, 0, 0.45, 0, 0, 0)
+texture_albedo = ExtResource("1_uuigt")
+
+[node name="AreaBody3D" type="Area3D" parent="Box" groups=["object"]]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box/AreaBody3D"]
+shape = SubResource("ConvexPolygonShape3D_0boje")
+
+[connection signal="body_entered" from="Box/AreaBody3D" to="." method="_on_area_3d_body_entered"]
