@@ -17,11 +17,18 @@ var rotors_active := false
 var initial_rotor_y_rotation: float
 var can_restart_rotor := true
 
-# Camera zoom variables
-@export var zoom_in_fov := 60.0  # Adjust this value for closer zoom
-@export var zoom_out_fov := 90.0  # Adjust this value for wider zoom
-@export var zoom_speed := 2.0  # Adjust this value to change zoom speed
+# Camera variables
+@export_group("Camera")
+@export var zoom_in_fov := 60.0  # Closer zoom when landed
+@export var zoom_out_fov := 100.0  # Wider zoom when in flight
+@export var zoom_duration := 1.0  # Duration of the zoom transition in seconds
+@export var zoom_height_threshold := 2.0  # Height at which to switch FOV
+@export var camera_distance := 10.0
+@export var camera_height := 5.0
 var current_fov := zoom_in_fov
+var fov_transition_timer := 0.0
+var fov_start := zoom_in_fov
+var fov_target := zoom_in_fov
 
 # Camera position offset
 var camera_offset := Vector3(0, 2, 5)  # Adjust these values to position the camera
@@ -34,7 +41,8 @@ var can_fire := true
 func _ready():
 	initial_rotor_y_rotation = rotor.rotation.y
 	initial_camera_rotation = camera_3d.global_transform.basis
-	current_fov = camera_3d.fov
+	current_fov = zoom_in_fov
+	camera_3d.fov = current_fov
 
 func _process(delta: float) -> void:
 	if rotors_active:
@@ -45,19 +53,30 @@ func _process(delta: float) -> void:
 	update_camera_position()
 
 func update_camera_position():
-	# Calculate the camera position based on the helicopter's current orientation
-	var rotated_offset = global_transform.basis * camera_offset
-	var new_camera_position = global_position + rotated_offset
+	# Calculate the desired camera position
+	var camera_offset = Vector3(0, camera_height, camera_distance)
+	var target_position = global_position + camera_offset
 
-	# Update the camera's global position
-	camera_3d.global_position = new_camera_position
+	# Smoothly interpolate the camera's position
+	camera_3d.global_position = camera_3d.global_position.lerp(target_position, 0.1)
 
-	# Lock the camera's rotation to its initial state
-	camera_3d.global_transform.basis = initial_camera_rotation
-
-	# Make the camera look at a point slightly above the helicopter
-	var look_target = global_position + global_transform.basis.y * 1.5
-	camera_3d.look_at(look_target, Vector3.UP)
+	# Make the camera look at the helicopter
+	camera_3d.look_at(global_position, Vector3.UP)
+	
+#func update_camera_position():
+	## Calculate the camera position based on the helicopter's current orientation
+	#var rotated_offset = global_transform.basis * camera_offset
+	#var new_camera_position = global_position + rotated_offset
+#
+	## Update the camera's global position
+	#camera_3d.global_position = new_camera_position
+#
+	## Lock the camera's rotation to its initial state
+	#camera_3d.global_transform.basis = initial_camera_rotation
+#
+	## Make the camera look at a point slightly above the helicopter
+	#var look_target = global_position + global_transform.basis.y * 1.5
+	#camera_3d.look_at(look_target, Vector3.UP)
 
 func handle_input(delta):
 	# thrust
@@ -140,6 +159,13 @@ func complete_level(next_level_file: String):
 	tween.tween_interval(1.5)
 	tween.tween_callback(get_tree().change_scene_to_file.bind(next_level_file))
 
+func start_rotor():
+	rotors_active = true
+	can_restart_rotor = false
+	var tween = create_tween()
+	tween.tween_property(self, "rotor_speed", 25.0, 0.5)
+	print("Rotors started. Rotors Active: ", rotors_active)
+
 func land():
 	if rotor.rotation.y != 0:
 		var tween = create_tween()
@@ -147,15 +173,29 @@ func land():
 		tween.tween_callback(func():
 			rotors_active = false
 			can_restart_rotor = true
+			print("Helicopter landed. Rotors Active: ", rotors_active)
 		)
 
-func start_rotor():
-	rotors_active = true
-	can_restart_rotor = false
-	var tween = create_tween()
-	tween.tween_property(self, "rotor_speed", 25.0, 0.5) 
-
 func handle_camera_zoom(delta):
-	var target_fov = zoom_out_fov if Input.is_action_pressed("thrust") else zoom_in_fov
-	camera_3d.fov = move_toward(current_fov, target_fov, zoom_speed * delta)
-	camera_3d.fov = current_fov
+	var new_target_fov = zoom_out_fov if position.y > zoom_height_threshold else zoom_in_fov
+	
+	if new_target_fov != fov_target:
+		fov_target = new_target_fov
+		fov_start = current_fov
+		fov_transition_timer = 0.0
+	
+	if fov_start != fov_target:
+		fov_transition_timer += delta
+		var t = clamp(fov_transition_timer / zoom_duration, 0.0, 1.0)
+		var ease_t = ease_in_out(t)
+		current_fov = lerp(fov_start, fov_target, ease_t)
+		camera_3d.fov = current_fov
+		
+		if t >= 1.0:
+			fov_start = fov_target
+			fov_transition_timer = 0.0
+		
+		print("FOV: ", current_fov, " Target FOV: ", fov_target, " Height: ", position.y, " Ease T: ", ease_t)
+
+func ease_in_out(t: float) -> float:
+	return t * t * (3.0 - 2.0 * t)

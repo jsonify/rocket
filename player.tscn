@@ -46,6 +46,11 @@ linear_damp = 1.0
 angular_damp = 3.0
 script = ExtResource("1_4oxyg")
 rotor_speed = 20.0
+zoom_in_fov = 50.0
+zoom_out_fov = 80.0
+zoom_height_threshold = 1.5
+camera_distance = 10.41
+camera_height = 1.06
 
 [node name="HelicoptorBody" type="Node3D" parent="."]
 
@@ -139,6 +144,8 @@ stream = ExtResource("4_6sobr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.83053)
 
 [node name="Camera3D" type="Camera3D" parent="CameraMount"]
+transform = Transform3D(1, 0, 0, 0, 0.972149, 0.234362, 0, -0.234362, 0.972149, 0, 0.667677, 0)
 current = true
+fov = 60.0
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
