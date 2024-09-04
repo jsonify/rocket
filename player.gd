@@ -54,7 +54,7 @@ func _process(delta: float) -> void:
 
 func update_camera_position():
 	# Calculate the desired camera position
-	var camera_offset = Vector3(0, camera_height, camera_distance)
+	camera_offset = Vector3(0, camera_height, camera_distance)
 	var target_position = global_position + camera_offset
 
 	# Smoothly interpolate the camera's position
@@ -134,12 +134,15 @@ func stop_rotors(delta):
 	pass
 
 func _on_body_entered(body: Node) -> void:
-	if not is_transitioning:
-		if "Goal" in body.get_groups():
+	if is_transitioning:
+		return
+
+	match true:
+		_ when body.is_in_group("Goal"):
 			complete_level(body.file_path)
-		if "Hazard" in body.get_groups():
+		_ when body.is_in_group("Hazard"):
 			crash_sequence()
-		if "SafeLanding" in body.get_groups():
+		_ when body.is_in_group("SafeLanding"):
 			land()
 
 func crash_sequence():
@@ -195,7 +198,5 @@ func handle_camera_zoom(delta):
 			fov_start = fov_target
 			fov_transition_timer = 0.0
 		
-		print("FOV: ", current_fov, " Target FOV: ", fov_target, " Height: ", position.y, " Ease T: ", ease_t)
-
 func ease_in_out(t: float) -> float:
 	return t * t * (3.0 - 2.0 * t)

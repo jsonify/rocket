@@ -24,7 +24,7 @@ mesh = SubResource("BoxMesh_6qpo7")
 autostart = true
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.424805, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0703735, 0, 0)
 target_position = Vector3(1, 0, 0)
 collision_mask = 2
 collide_with_areas = true
