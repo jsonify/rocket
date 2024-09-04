@@ -1,11 +1,10 @@
-[gd_scene load_steps=16 format=3 uid="uid://pe20ipdc1u1y"]
+[gd_scene load_steps=15 format=3 uid="uid://pe20ipdc1u1y"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4oxyg"]
 [ext_resource type="AudioStream" uid="uid://c3f1p2jmrxoyn" path="res://Audio/SFX - Death Explosion.ogg" id="2_4kw30"]
 [ext_resource type="Material" uid="uid://d3jwuhmj6iea2" path="res://ShipRedMaterial.tres" id="2_uly8q"]
 [ext_resource type="AudioStream" uid="uid://bo0g10arlfpjt" path="res://Audio/SFX - Success.ogg" id="3_lyep8"]
 [ext_resource type="AudioStream" uid="uid://bngoqyhjeh8bd" path="res://Audio/SFX - Main engine thrust.ogg" id="4_6sobr"]
-[ext_resource type="PackedScene" uid="uid://ux6ivcx1ovdp" path="res://Particles/booster_particles.tscn" id="5_aa4ex"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_uhnwv"]
 size = Vector3(1, 0.3, 0.5)
@@ -136,16 +135,10 @@ stream = ExtResource("3_lyep8")
 [node name="RocketAudio" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("4_6sobr")
 
-[node name="BoosterParticles" parent="." instance=ExtResource("5_aa4ex")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-visible = false
+[node name="CameraMount" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.83053)
 
-[node name="RightBoosterParticles" parent="." instance=ExtResource("5_aa4ex")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, -1, 0)
-visible = false
-
-[node name="LeftBoosterParticles" parent="." instance=ExtResource("5_aa4ex")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, -1, 0)
-visible = false
+[node name="Camera3D" type="Camera3D" parent="CameraMount"]
+current = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
