@@ -24,7 +24,7 @@ transform = Transform3D(-1.96701e-08, -0.45, 0, 0.45, -1.96701e-08, 0, 0, 0, 0.4
 texture_albedo = ExtResource("1_uuigt")
 
 [node name="AreaBody3D" type="Area3D" parent="Box" groups=["object"]]
-collision_layer = 4
+collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Box/AreaBody3D"]

@@ -1,4 +1,4 @@
-extends RigidBody3D
+class_name Player extends RigidBody3D
 
 @export_range(750.0, 3500.0) var thrust := 1000.0
 @export var torque_thrust := 100.0

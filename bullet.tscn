@@ -3,11 +3,15 @@
 [ext_resource type="Script" path="res://bullet.gd" id="1_puerj"]
 [ext_resource type="PackedScene" uid="uid://ux6ivcx1ovdp" path="res://Particles/booster_particles.tscn" id="2_c6um8"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_6qpo7"]
-size = Vector3(0.25, 0.25, 0.25)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5g6h1"]
+albedo_color = Color(1, 0, 0.027451, 1)
+emission_enabled = true
+emission = Color(1, 0.387956, 0.319725, 1)
+emission_energy_multiplier = 5.0
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ossd8"]
-points = PackedVector3Array(-0.125, -0.125, -0.125, 0.125, 0.125, 0.125, 0.125, -0.125, 0.125, 0.125, 0.125, -0.125, -0.125, 0.125, 0.125, 0.125, -0.125, -0.125, -0.125, -0.125, 0.125, -0.125, 0.125, -0.125)
+[sub_resource type="BoxMesh" id="BoxMesh_6qpo7"]
+material = SubResource("StandardMaterial3D_5g6h1")
+size = Vector3(0.75, 0.025, 0.025)
 
 [node name="Bullet" type="Node3D" groups=["object"]]
 script = ExtResource("1_puerj")
@@ -16,18 +20,16 @@ speed = 25.0
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_6qpo7")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
-collision_layer = 8
-collision_mask = 4
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
-shape = SubResource("ConvexPolygonShape3D_ossd8")
-
-[node name="BoosterParticles" parent="." instance=ExtResource("2_c6um8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-visible = false
-
 [node name="Timer" type="Timer" parent="."]
 autostart = true
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.336182, 0, 0)
+target_position = Vector3(1, 0, 0)
+collision_mask = 2
+collide_with_areas = true
+
+[node name="BoosterParticles" parent="." instance=ExtResource("2_c6um8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325562, 0, 0)
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
