@@ -35,8 +35,7 @@ var fov_start := zoom_in_fov
 var fov_target := zoom_in_fov
 
 var camera_offset := Vector3(0, 2, 5)
-
-var bullet_scene = preload("res://bullet.tscn")
+const BULLET = preload("res://Scenes/Player/bullet.tscn")
 @export var fire_rate := 0.2
 var can_fire := true
 
@@ -140,7 +139,7 @@ func start_stopwatch():
 		stopwatch_started = true
 
 func shoot():
-	var bullet_instance = bullet_scene.instantiate()
+	var bullet_instance = BULLET.instantiate()
 	bullet_instance.global_transform = bullet_spawn.global_transform
 	get_tree().root.add_child(bullet_instance)
 	apply_central_impulse(-bullet_spawn.global_transform.basis.z * 5)
@@ -200,10 +199,23 @@ func crash_sequence():
 func complete_level(next_level_file: String):
 	print("Level Complete")
 	set_process(false)
+	GameManager.stop_stopwatch()
+	land()
+	auto_next_level(false)
+
+func auto_next_level(input: bool, next_level_file: String = ""):
+	if not input:
+		return
+		
+	if input and next_level_file.is_empty():
+		print("Error: next_level_file is required when input is true")
+		return
+		
 	is_transitioning = true
 	var tween = create_tween()
-	tween.tween_interval(1.5)
+	tween.tween_interval(2)
 	tween.tween_callback(get_tree().change_scene_to_file.bind(next_level_file))
+		
 
 func land():
 	if rotor.rotation.y != 0:

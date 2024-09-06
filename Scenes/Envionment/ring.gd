@@ -58,6 +58,7 @@ func _on_success_area_3d_body_exited(body: Node3D) -> void:
 		is_triggered = true
 		set_mesh_color(Color(0.0, 1.0, 0.0))  # Set to green, fully opaque
 		fail_area_3d.monitoring = false
+		GameManager.increment_ring_count()
 		ring_success.emit()
 		fade_out()
 

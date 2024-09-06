@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://cj57xfvgipxi7"]
 
-[ext_resource type="PackedScene" uid="uid://qrneqqlh28dg" path="res://Level/level.tscn" id="1_5dam5"]
-[ext_resource type="PackedScene" uid="uid://b3metx6tihn22" path="res://UI/ui.tscn" id="1_vx67f"]
+[ext_resource type="PackedScene" uid="uid://b3metx6tihn22" path="res://UI/ui.tscn" id="1_2e4u1"]
+[ext_resource type="PackedScene" uid="uid://blngh1dpkf08t" path="res://Level/level_1.tscn" id="2_dc3ew"]
 
 [node name="Game" type="Node3D"]
 
-[node name="UI" parent="." instance=ExtResource("1_vx67f")]
+[node name="UI" parent="." instance=ExtResource("1_2e4u1")]
 scale = Vector2(2, 2)
 transform = Transform2D(2, 0, 0, 2, 0, 0)
 
@@ -15,14 +15,18 @@ anchor_left = 0.476264
 anchor_top = 0.0215679
 anchor_right = 0.476264
 anchor_bottom = 0.0215679
-offset_left = -106.156
+offset_left = -161.656
 offset_top = 20.024
-offset_right = 8.84399
+offset_right = 6.34387
 offset_bottom = 60.024
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Level" parent="." instance=ExtResource("1_5dam5")]
+[node name="Label" parent="UI/Control/RingsCounter" index="1"]
+text = "10 / 10
+"
+
+[node name="Level" parent="." instance=ExtResource("2_dc3ew")]
 
 [editable path="UI"]
 [editable path="UI/Control/RingsCounter"]
