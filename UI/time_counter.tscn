@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dnx5kfgljuxsg"]
+
+[ext_resource type="PackedScene" uid="uid://4xfy3aa5uml6" path="res://UI/counter.tscn" id="1_ufacs"]
+[ext_resource type="Texture2D" uid="uid://bjtvtwdre6xm2" path="res://UI/timer.png" id="2_tol8v"]
+
+[node name="TimeCounter" instance=ExtResource("1_ufacs")]
+offset_right = 197.0
+
+[node name="Icon" parent="." index="0"]
+texture = ExtResource("2_tol8v")
+
+[node name="Label" parent="." index="1"]
+text = "00:00.00
+"

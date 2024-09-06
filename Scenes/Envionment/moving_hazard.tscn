@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://ccqscbkdpdylp"]
 
-[ext_resource type="Script" path="res://moving_hazard.gd" id="1_di2li"]
+[ext_resource type="Script" path="res://Scenes/Envionment/moving_hazard.gd" id="1_di2li"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1da42"]
 albedo_color = Color(0.921569, 0.905882, 0.372549, 1)

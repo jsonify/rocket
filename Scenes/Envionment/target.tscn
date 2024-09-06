@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://47fcgf02oqoa"]
 
-[ext_resource type="Script" path="res://target.gd" id="1_53nu4"]
+[ext_resource type="Script" path="res://Scenes/Envionment/target.gd" id="1_53nu4"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jb5bs"]
 albedo_color = Color(1, 0.0745098, 0.0509804, 1)
@@ -23,7 +23,6 @@ mesh = SubResource("BoxMesh_n7q5o")
 
 [node name="AreaBody3D" type="Area3D" parent="Box" groups=["object"]]
 collision_layer = 2
-collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Box/AreaBody3D"]
 shape = SubResource("ConvexPolygonShape3D_0boje")

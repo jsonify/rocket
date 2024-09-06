@@ -1,0 +1,9 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dajd4swyk60tx"]
+
+[ext_resource type="FontFile" uid="uid://tqp3v8g7656u" path="res://UI/Theme/Comfortaa-Bold.ttf" id="1_hffid"]
+
+[resource]
+default_font = ExtResource("1_hffid")
+default_font_size = 30
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/fonts/font = ExtResource("1_hffid")

@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://cj57xfvgipxi7"]
+
+[ext_resource type="PackedScene" uid="uid://qrneqqlh28dg" path="res://Level/level.tscn" id="1_5dam5"]
+[ext_resource type="PackedScene" uid="uid://b3metx6tihn22" path="res://UI/ui.tscn" id="1_vx67f"]
+
+[node name="Game" type="Node3D"]
+
+[node name="UI" parent="." instance=ExtResource("1_vx67f")]
+scale = Vector2(2, 2)
+transform = Transform2D(2, 0, 0, 2, 0, 0)
+
+[node name="RingsCounter" parent="UI/Control" index="0"]
+anchors_preset = -1
+anchor_left = 0.476264
+anchor_top = 0.0215679
+anchor_right = 0.476264
+anchor_bottom = 0.0215679
+offset_left = -106.156
+offset_top = 20.024
+offset_right = 8.84399
+offset_bottom = 60.024
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Level" parent="." instance=ExtResource("1_5dam5")]
+
+[editable path="UI"]
+[editable path="UI/Control/RingsCounter"]
+[editable path="UI/Control/TimeCounter"]

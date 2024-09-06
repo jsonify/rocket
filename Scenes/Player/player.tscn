@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://pe20ipdc1u1y"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_4oxyg"]
+[ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_4oxyg"]
 [ext_resource type="AudioStream" uid="uid://c3f1p2jmrxoyn" path="res://Audio/SFX - Death Explosion.ogg" id="2_4kw30"]
 [ext_resource type="Material" uid="uid://d3jwuhmj6iea2" path="res://ShipRedMaterial.tres" id="2_uly8q"]
 [ext_resource type="AudioStream" uid="uid://bo0g10arlfpjt" path="res://Audio/SFX - Success.ogg" id="3_lyep8"]
@@ -37,6 +37,8 @@ size = Vector3(2.03467, 0.718262, 0.5)
 
 [node name="Player" type="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.610655, 0)
+collision_layer = 8
+collision_mask = 4
 axis_lock_linear_z = true
 axis_lock_angular_x = true
 axis_lock_angular_y = true

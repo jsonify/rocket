@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3 uid="uid://4xfy3aa5uml6"]
+
+[ext_resource type="Texture2D" uid="uid://n3fydb1eeqhm" path="res://UI/label_bg.png" id="1_ss8sm"]
+[ext_resource type="Texture2D" uid="uid://xt4kqt5bbdeb" path="res://UI/gold-ring.png" id="2_403up"]
+
+[node name="Counter" type="NinePatchRect"]
+offset_right = 115.0
+offset_bottom = 40.0
+texture = ExtResource("1_ss8sm")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="Icon" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -43.0
+offset_top = -24.0
+offset_bottom = 24.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("2_403up")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 19.0
+offset_top = -21.0
+offset_right = 68.0
+offset_bottom = 21.0
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "10
+"
+horizontal_alignment = 1
+vertical_alignment = 1

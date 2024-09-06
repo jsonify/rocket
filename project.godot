@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Rocket"
-run/main_scene="res://Level/level.tscn"
+run/main_scene="res://Scenes/game.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://GlobalScripts/game_manager.gd"
 
 [display]
 
@@ -63,7 +67,12 @@ fire={
 
 [layer_names]
 
-3d_physics/layer_1="Body"
-3d_physics/layer_2="Nose"
-3d_physics/layer_3="Target"
-3d_physics/layer_4="Bullet"
+3d_physics/layer_1="Bullet"
+3d_physics/layer_2="Target"
+3d_physics/layer_3="Ground"
+3d_physics/layer_4="Helicopter"
+3d_physics/layer_5="Ring"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0

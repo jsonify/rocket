@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vs2g3tx6l8y6"
-path.s3tc="res://.godot/imported/target-logo.svg-2f89bc0f82327b309b07e27add78bf2c.s3tc.ctex"
+path.s3tc="res://.godot/imported/target-logo.svg-23d3f51f1dcd5e3136af548eb2bbe528.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://target-logo.svg"
-dest_files=["res://.godot/imported/target-logo.svg-2f89bc0f82327b309b07e27add78bf2c.s3tc.ctex"]
+source_file="res://Scenes/Envionment/target-logo.svg"
+dest_files=["res://.godot/imported/target-logo.svg-23d3f51f1dcd5e3136af548eb2bbe528.s3tc.ctex"]
 
 [params]
 

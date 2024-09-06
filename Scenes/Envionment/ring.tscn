@@ -1,0 +1,76 @@
+[gd_scene load_steps=6 format=3 uid="uid://ceqqh3ic2kihq"]
+
+[ext_resource type="Script" path="res://Scenes/Envionment/ring.gd" id="1_1m6ix"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fyust"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 1)
+metallic = 0.87
+metallic_specular = 0.68
+
+[sub_resource type="TorusMesh" id="TorusMesh_myegs"]
+material = SubResource("StandardMaterial3D_fyust")
+inner_radius = 1.3
+outer_radius = 1.5
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ucpgq"]
+height = 0.189208
+radius = 1.16631
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ngj1p"]
+size = Vector3(0.2, 0.25, 1)
+
+[node name="Ring" type="Node3D"]
+script = ExtResource("1_1m6ix")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_myegs")
+
+[node name="SuccessArea3D" type="Area3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+collision_layer = 16
+collision_mask = 9
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SuccessArea3D"]
+shape = SubResource("CylinderShape3D_ucpgq")
+
+[node name="FailArea3D" type="Area3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+collision_layer = 16
+collision_mask = 9
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FailArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 0, 0)
+shape = SubResource("BoxShape3D_ngj1p")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="FailArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, 0)
+shape = SubResource("BoxShape3D_ngj1p")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="FailArea3D"]
+transform = Transform3D(-4.37114e-08, 4.37114e-08, 1, 4.37114e-08, 1, -4.37114e-08, -1, 4.37114e-08, -4.37114e-08, 0, 0, -1.4)
+shape = SubResource("BoxShape3D_ngj1p")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="FailArea3D"]
+transform = Transform3D(-4.37114e-08, 4.37114e-08, 1, 4.37114e-08, 1, -4.37114e-08, -1, 4.37114e-08, -4.37114e-08, 0, 0, 1.4)
+shape = SubResource("BoxShape3D_ngj1p")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="FailArea3D"]
+transform = Transform3D(0.709423, 1.27015e-08, 0.704783, 1.27015e-08, 1, -3.0807e-08, -0.704783, 3.0807e-08, 0.709423, -1, 0, 1)
+shape = SubResource("BoxShape3D_ngj1p")
+
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="FailArea3D"]
+transform = Transform3D(0.709423, 1.27015e-08, 0.704783, 1.27015e-08, 1, -3.0807e-08, -0.704783, 3.0807e-08, 0.709423, 1, 0, -1)
+shape = SubResource("BoxShape3D_ngj1p")
+
+[node name="CollisionShape3D7" type="CollisionShape3D" parent="FailArea3D"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 1, 0, 1)
+shape = SubResource("BoxShape3D_ngj1p")
+
+[node name="CollisionShape3D8" type="CollisionShape3D" parent="FailArea3D"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -1, 0, -1)
+shape = SubResource("BoxShape3D_ngj1p")
+
+[connection signal="body_exited" from="SuccessArea3D" to="." method="_on_success_area_3d_body_exited"]
+[connection signal="body_entered" from="FailArea3D" to="." method="_on_fail_area_3d_body_entered"]
