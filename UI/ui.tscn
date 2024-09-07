@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3metx6tihn22"]
+[gd_scene load_steps=5 format=3 uid="uid://b3metx6tihn22"]
 
 [ext_resource type="PackedScene" uid="uid://cnman6yff6f3d" path="res://UI/rings_counter.tscn" id="1_cvh43"]
 [ext_resource type="Script" path="res://UI/ui.gd" id="1_jak36"]
 [ext_resource type="PackedScene" uid="uid://dnx5kfgljuxsg" path="res://UI/time_counter.tscn" id="2_3kciu"]
+[ext_resource type="PackedScene" uid="uid://4xfy3aa5uml6" path="res://UI/counter.tscn" id="4_hr77k"]
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_jak36")
@@ -33,5 +34,16 @@ offset_top = 32.0
 offset_right = 229.0
 offset_bottom = 72.0
 
+[node name="ScoreLabel" parent="Control" instance=ExtResource("4_hr77k")]
+layout_mode = 0
+offset_left = 530.0
+offset_top = 29.0
+offset_right = 645.0
+offset_bottom = 69.0
+
+[node name="Icon" parent="Control/ScoreLabel" index="0"]
+visible = false
+
 [editable path="Control/RingsCounter"]
 [editable path="Control/TimeCounter"]
+[editable path="Control/ScoreLabel"]
