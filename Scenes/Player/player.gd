@@ -104,11 +104,11 @@ func handle_input(delta):
 	
 	# backwards
 	if Input.is_action_pressed("backwards"):
-		apply_torque(Vector3(0.0, 0.0, torque_thrust * delta * (-1 if is_reversed else 1)))
+		apply_torque(Vector3(0.0, 0.0, torque_thrust * delta ))
 
 	# forward
 	if Input.is_action_pressed("forward"):
-		apply_torque(Vector3(0.0, 0.0, -torque_thrust * delta * (-1 if is_reversed else 1)))
+		apply_torque(Vector3(0.0, 0.0, -torque_thrust * delta))
 
 	# fire bullet
 	if Input.is_action_pressed("fire") and can_fire:
