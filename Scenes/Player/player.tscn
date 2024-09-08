@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://pe20ipdc1u1y"]
+[gd_scene load_steps=17 format=3 uid="uid://pe20ipdc1u1y"]
 
 [ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_4oxyg"]
 [ext_resource type="AudioStream" uid="uid://c3f1p2jmrxoyn" path="res://Audio/SFX - Death Explosion.ogg" id="2_4kw30"]
@@ -36,10 +36,13 @@ size = Vector3(0.0869141, 0.249512, 2000.64)
 [sub_resource type="BoxShape3D" id="BoxShape3D_eo5au"]
 size = Vector3(2.03467, 0.718262, 0.5)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_jscb0"]
+size = Vector3(2.06976, 0.531372, 1)
+
 [node name="Player" type="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.610655, 0)
 collision_layer = 8
-collision_mask = 4
+collision_mask = 36
 axis_lock_linear_z = true
 axis_lock_angular_x = true
 axis_lock_angular_y = true
@@ -167,6 +170,15 @@ offset_right = 387.0
 offset_bottom = 127.0
 text = "Reduce  Gas"
 
+[node name="Hurtbox" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 64
+
+[node name="HurtboxCollisionShape3D" type="CollisionShape3D" parent="Hurtbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0210876, -0.103943, 0)
+shape = SubResource("BoxShape3D_jscb0")
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="pressed" from="AddGas" to="." method="_on_add_gas_pressed"]
 [connection signal="pressed" from="ReduceGas" to="." method="_on_reduce_gas_pressed"]
+[connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]

@@ -256,3 +256,8 @@ func land():
 			print("Player: Stopwatch stopped")
 			emit_signal("player_landed")
 		)
+
+
+func _on_hurtbox_body_entered(body: Node3D) -> void:
+	if body.is_in_group("Enemy"):
+		print("Enemy entered")

@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://gv6ocd6jq7rp"]
+
+[ext_resource type="Texture2D" uid="uid://c4v25gtivlt5o" path="res://UI/logos/gas-can-logo.png" id="1_chwn7"]
+[ext_resource type="Script" path="res://Pickups/GasPickup/gas_pickup.gd" id="1_sx3ue"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hlbpw"]
+size = Vector3(2.50781, 2.0166, 1)
+
+[node name="GasPickup" type="Node3D"]
+script = ExtResource("1_sx3ue")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+texture = ExtResource("1_chwn7")
+
+[node name="GasPickupBox" type="Area3D" parent="."]
+collision_layer = 32
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GasPickupBox"]
+shape = SubResource("BoxShape3D_hlbpw")
+
+[connection signal="body_entered" from="GasPickupBox" to="." method="_on_gas_pickup_box_body_entered"]
