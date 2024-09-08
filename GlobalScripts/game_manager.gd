@@ -16,38 +16,21 @@ func _process(delta):
 	if stopwatch_running:
 		stopwatch_time += delta
 		emit_signal("stopwatch_updated", stopwatch_time)
-		#print("GameManager: Stopwatch updated - ", stopwatch_time)
 
 func increment_enemy_count():
 	enemy_count += 1
 	emit_signal("enemy_count_changed", enemy_count)
-	#print("GameManager: Ring count changed - ", ring_count)
 	update_score()
-	
-#func increment_ring_count():
-	#ring_count += 1
-	#emit_signal("ring_count_changed", ring_count)
-	##print("GameManager: Ring count changed - ", ring_count)
-	#update_score()
-
-#func set_total_rings(count: int):
-	#total_rings = count
-	#print("GameManager: Total rings set - ", total_rings)
 
 func start_stopwatch():
 	stopwatch_running = true
-	#print("GameManager: Stopwatch started")
 
 func stop_stopwatch():
 	stopwatch_running = false
 	update_score()
 	emit_signal("game_finished")
-	#print("GameManager: Stopwatch stopped, game finished")
 
 func update_score():
-	#var ring_score = ring_count * 1000
-	#if ring_count == total_rings:
-		#ring_score *= 1.5
 	var enemy_score = enemy_count * 1000
 
 	var time_factor = 1.0 if stopwatch_time == 0 else 1.0 + (0.1 / stopwatch_time)
@@ -57,11 +40,10 @@ func update_score():
 
 func reset_game_state():
 	enemy_count = 0
-	#ring_count = 0
 	stopwatch_time = 0.0
 	stopwatch_running = false
 	current_score = 0
 	emit_signal("enemy_count_changed", enemy_count)
 	emit_signal("stopwatch_updated", stopwatch_time)
 	emit_signal("score_updated", current_score)
-	#print("GameManager: Game state reset")
+	GasManager.current_gas_level = 100

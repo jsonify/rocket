@@ -15,6 +15,9 @@ class_name Player extends RigidBody3D
 @onready var camera_mount: Node3D = $CameraMount
 @onready var camera_3d: Camera3D = $CameraMount/Camera3D
 
+const BULLET = preload("res://Scenes/Player/bullet2.tscn")
+const EXPLOSION = preload("res://Scenes/explosion.tscn")
+
 var is_transitioning := false
 var rotors_active := false
 var initial_rotor_y_rotation: float
@@ -40,7 +43,6 @@ var fov_start := zoom_in_fov
 var fov_target := zoom_in_fov
 
 var camera_offset := Vector3(0, 2, 5)
-const BULLET = preload("res://Scenes/Player/bullet2.tscn")
 @export var fire_rate := 0.2
 var can_fire := true
 
@@ -127,15 +129,14 @@ func handle_input(delta):
 
 func handle_thrust(delta):
 	if gas_level > 0:
-		GasManager.reduce_gas_level(1.0)
+		GasManager.reduce_gas_level()
 		if can_restart_rotor and not rotors_active:
 			start_rotor()
 		if not stopwatch_started:
 			start_stopwatch()
 		apply_central_force(basis.y * delta * thrust)
-		print("gas level: ", gas_level)
 	else:
-		set_process(false)
+		crash_sequence()
 	
 	
 
@@ -217,9 +218,13 @@ func _on_body_entered(body: Node) -> void:
 			land()
 
 func crash_sequence():
-	print("Player: Crashed!")
-	helicoptor_body.visible = false
+	set_physics_process(false)
 	set_process(false)
+	var explode_instance = EXPLOSION.instantiate() as Node3D
+	explode_instance.global_transform = global_transform
+	get_tree().root.add_child(explode_instance)
+	
+	helicoptor_body.visible = false
 	is_transitioning = true
 	var tween = create_tween()
 	tween.tween_interval(2.5)
