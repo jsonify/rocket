@@ -5,11 +5,11 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nlub3"]
 bg_color = Color(1, 0, 0, 1)
 
-[node name="Healthbar" type="ProgressBar"]
+[node name="Gasbar" type="ProgressBar"]
 z_index = 1
 offset_right = 240.0
 offset_bottom = 20.0
 theme_override_styles/background = SubResource("StyleBoxFlat_0c0ig")
 theme_override_styles/fill = SubResource("StyleBoxFlat_nlub3")
-value = 60.0
+value = 100.0
 show_percentage = false

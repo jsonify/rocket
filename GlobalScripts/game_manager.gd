@@ -1,12 +1,13 @@
 extends Node
 
-signal ring_count_changed(new_count: int)
+#signal ring_count_changed(new_count: int)
+signal enemy_count_changed(new_count: int)
 signal stopwatch_updated(time: float)
 signal score_updated(new_score: int)
 signal game_finished
 
-var ring_count: int = 0
-var total_rings: int = 0
+var enemy_count: int = 0
+#var total_rings: int = 0
 var stopwatch_time: float = 0.0
 var stopwatch_running: bool = false
 var current_score: int = 0
@@ -17,14 +18,20 @@ func _process(delta):
 		emit_signal("stopwatch_updated", stopwatch_time)
 		#print("GameManager: Stopwatch updated - ", stopwatch_time)
 
-func increment_ring_count():
-	ring_count += 1
-	emit_signal("ring_count_changed", ring_count)
+func increment_enemy_count():
+	enemy_count += 1
+	emit_signal("enemy_count_changed", enemy_count)
 	#print("GameManager: Ring count changed - ", ring_count)
 	update_score()
+	
+#func increment_ring_count():
+	#ring_count += 1
+	#emit_signal("ring_count_changed", ring_count)
+	##print("GameManager: Ring count changed - ", ring_count)
+	#update_score()
 
-func set_total_rings(count: int):
-	total_rings = count
+#func set_total_rings(count: int):
+	#total_rings = count
 	#print("GameManager: Total rings set - ", total_rings)
 
 func start_stopwatch():
@@ -38,20 +45,23 @@ func stop_stopwatch():
 	#print("GameManager: Stopwatch stopped, game finished")
 
 func update_score():
-	var ring_score = ring_count * 1000
-	if ring_count == total_rings:
-		ring_score *= 1.5
+	#var ring_score = ring_count * 1000
+	#if ring_count == total_rings:
+		#ring_score *= 1.5
+	var enemy_score = enemy_count * 1000
+
 	var time_factor = 1.0 if stopwatch_time == 0 else 1.0 + (0.1 / stopwatch_time)
-	current_score = int(ring_score * time_factor)
+	current_score = int(enemy_score * time_factor)
 	emit_signal("score_updated", current_score)
 	print("GameManager: Score updated - ", current_score)
 
 func reset_game_state():
-	ring_count = 0
+	enemy_count = 0
+	#ring_count = 0
 	stopwatch_time = 0.0
 	stopwatch_running = false
 	current_score = 0
-	emit_signal("ring_count_changed", ring_count)
+	emit_signal("enemy_count_changed", enemy_count)
 	emit_signal("stopwatch_updated", stopwatch_time)
 	emit_signal("score_updated", current_score)
 	#print("GameManager: Game state reset")

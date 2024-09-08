@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://b3metx6tihn22"]
+[gd_scene load_steps=8 format=3 uid="uid://b3metx6tihn22"]
 
 [ext_resource type="PackedScene" uid="uid://cnman6yff6f3d" path="res://UI/rings_counter.tscn" id="1_cvh43"]
 [ext_resource type="Script" path="res://UI/ui.gd" id="1_jak36"]
 [ext_resource type="PackedScene" uid="uid://dnx5kfgljuxsg" path="res://UI/time_counter.tscn" id="2_3kciu"]
-[ext_resource type="Texture2D" uid="uid://dhi7jt4pcghog" path="res://UI/turret-logo.png" id="3_p2ymy"]
+[ext_resource type="PackedScene" uid="uid://dxbk7gey72xj7" path="res://UI/healthbar.tscn" id="2_q63u6"]
 [ext_resource type="PackedScene" uid="uid://4xfy3aa5uml6" path="res://UI/counter.tscn" id="4_hr77k"]
 [ext_resource type="Texture2D" uid="uid://dws7oi6f4fwyy" path="res://UI/logos/stopwatch-logo.png" id="5_sit4d"]
+[ext_resource type="Texture2D" uid="uid://b3qsmbc8brj0u" path="res://UI/logos/skull-logo.png" id="7_dff1m"]
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_jak36")
@@ -18,24 +19,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RingCounter" parent="Control" instance=ExtResource("1_cvh43")]
+[node name="Stopwatch" parent="Control" instance=ExtResource("2_3kciu")]
+layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
-offset_left = 947.0
-offset_top = 34.0
-offset_right = 1112.0
-offset_bottom = 74.0
-grow_horizontal = 0
-
-[node name="Icon" parent="Control/RingCounter" index="0"]
-texture = ExtResource("3_p2ymy")
-
-[node name="Stopwatch" parent="Control" instance=ExtResource("2_3kciu")]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 32.0
-offset_right = 229.0
-offset_bottom = 72.0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -255.0
+offset_top = 28.0
+offset_right = -31.0
+offset_bottom = 68.0
 
 [node name="Icon" parent="Control/Stopwatch" index="0"]
 offset_left = -55.0
@@ -43,7 +36,6 @@ offset_right = 2.0
 texture = ExtResource("5_sit4d")
 
 [node name="ScoreLabel" parent="Control" instance=ExtResource("4_hr77k")]
-visible = false
 layout_mode = 0
 offset_left = 530.0
 offset_top = 29.0
@@ -57,6 +49,28 @@ visible = false
 text = "Score:     10
 "
 
-[editable path="Control/RingCounter"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+offset_left = 931.0
+offset_top = 23.0
+offset_right = 1131.0
+offset_bottom = 127.0
+
+[node name="Gasbar" parent="Control/VBoxContainer" instance=ExtResource("2_q63u6")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="EnemyCounter" parent="Control/VBoxContainer" instance=ExtResource("1_cvh43")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_direction = 2
+layout_mode = 2
+
+[node name="Icon" parent="Control/VBoxContainer/EnemyCounter" index="0"]
+texture = ExtResource("7_dff1m")
+
 [editable path="Control/Stopwatch"]
 [editable path="Control/ScoreLabel"]
+[editable path="Control/VBoxContainer/EnemyCounter"]

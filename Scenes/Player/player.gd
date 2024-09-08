@@ -1,7 +1,7 @@
 class_name Player extends RigidBody3D
 
-signal player_died
-signal player_landed  # New signal for landing
+#signal player_died
+#signal player_landed  # New signal for landing
 
 @export_range(750.0, 3500.0) var thrust := 1000.0
 @export var torque_thrust := 100.0
@@ -14,7 +14,6 @@ signal player_landed  # New signal for landing
 @onready var bullet_spawn: Marker3D = $HelicoptorBody/BulletSpawn
 @onready var camera_mount: Node3D = $CameraMount
 @onready var camera_3d: Camera3D = $CameraMount/Camera3D
-@onready var healthbar: ProgressBar = $Healthbar
 
 var is_transitioning := false
 var rotors_active := false
@@ -25,8 +24,7 @@ var is_flipping := false
 var flip_timer := 0.0
 var is_reversed := false
 
-var gas_level = 100
-var max_gas_level = 100
+var gas_level : float
 
 # Camera variables
 @export_group("Camera")
@@ -42,13 +40,14 @@ var fov_start := zoom_in_fov
 var fov_target := zoom_in_fov
 
 var camera_offset := Vector3(0, 2, 5)
-const BULLET = preload("res://Scenes/Player/bullet.tscn")
+const BULLET = preload("res://Scenes/Player/bullet2.tscn")
 @export var fire_rate := 0.2
 var can_fire := true
 
 func _ready():
-	gas_level = max_gas_level
-	healthbar.value = max_gas_level
+	gas_level = GasManager.current_gas_level
+	
+	#healthbar.value = max_gas_level
 	
 	if not camera_3d:
 		print("Player: Camera3D node not found")
@@ -68,7 +67,7 @@ func initial_camera_setup():
 		print("Player: Camera or player not ready for initial setup")
 
 func _physics_process(delta: float) -> void:
-	healthbar.value = gas_level
+	gas_level = GasManager.current_gas_level
 	if rotors_active:
 		rotate_rotors(delta)
 	
@@ -80,17 +79,10 @@ func _physics_process(delta: float) -> void:
 	
 	handle_camera_zoom(delta)
 	update_camera_position()
-
-func _on_add_gas_pressed():
-	if gas_level > 100:
-		gas_level = max_gas_level
 	
-	if gas_level < 100:
-		gas_level += 35
-		
-func _on_reduce_gas_pressed():
-	if gas_level > 0:
-		gas_level -= 5
+	if is_inside_tree():
+		update_camera_position()
+
 
 func check_upside_down():
 	if helicoptor_body.global_transform.basis.y.dot(Vector3.UP) < -0.5:
@@ -116,12 +108,8 @@ func apply_flip_force(delta: float):
 
 func handle_input(delta):
 	if Input.is_action_pressed("thrust"):
-		if can_restart_rotor and not rotors_active:
-			start_rotor()
-		if not stopwatch_started:
-			start_stopwatch()
-		apply_central_force(basis.y * delta * thrust)
-	
+		handle_thrust(delta)
+		
 	if Input.is_action_just_pressed("reverse_direction"):
 		reverse_helicopter()
 	
@@ -136,6 +124,20 @@ func handle_input(delta):
 		
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
+
+func handle_thrust(delta):
+	if gas_level > 0:
+		GasManager.reduce_gas_level(1.0)
+		if can_restart_rotor and not rotors_active:
+			start_rotor()
+		if not stopwatch_started:
+			start_stopwatch()
+		apply_central_force(basis.y * delta * thrust)
+		print("gas level: ", gas_level)
+	else:
+		set_process(false)
+	
+	
 
 func rotate_rotors(delta: float):
 	rotor.rotate_y(delta * rotor_speed)
@@ -161,17 +163,24 @@ func shoot():
 	var bullet_instance = BULLET.instantiate()
 	bullet_instance.global_transform = bullet_spawn.global_transform
 	get_tree().root.add_child(bullet_instance)
+	
+	#bullet_instance.enemy_hit.connect(_on_bullet_hit_enemy)
+	
 	apply_central_impulse(-bullet_spawn.global_transform.basis.z * 5)
 	can_fire = false
 	await get_tree().create_timer(fire_rate).timeout
 	can_fire = true
-	print("Player: Bullet fired")
+
+func _on_bullet_hit_enemy(enemy):
+	enemy.queue_free()
 
 func update_camera_position():
+	if not is_inside_tree() or not camera_3d.is_inside_tree():
+		return
 	camera_offset = Vector3(0, camera_height, camera_distance)
 	var target_position = global_position + camera_offset
 	camera_3d.global_position = camera_3d.global_position.lerp(target_position, 0.1)
-	camera_3d.look_at(global_position, Vector3.UP)
+	camera_3d.look_at_from_position(camera_3d.global_position, global_position, Vector3.UP)
 
 func handle_camera_zoom(delta):
 	var new_target_fov = zoom_out_fov if position.y > zoom_height_threshold else zoom_in_fov
@@ -201,7 +210,7 @@ func _on_body_entered(body: Node) -> void:
 
 	match true:
 		_ when body.is_in_group("Goal"):
-			complete_level(body.file_path)
+			complete_level()
 		_ when body.is_in_group("Hazard"):
 			crash_sequence()
 		_ when body.is_in_group("SafeLanding"):
@@ -216,7 +225,7 @@ func crash_sequence():
 	tween.tween_interval(2.5)
 	tween.tween_callback(get_tree().reload_current_scene)
 
-func complete_level(next_level_file: String):
+func complete_level():
 	print("Player: Level Complete")
 	set_process(false)
 	GameManager.stop_stopwatch()
@@ -238,12 +247,12 @@ func auto_next_level(input: bool, next_level_file: String = ""):
 func land():
 	if rotor.rotation.y != 0:
 		var tween = create_tween()
-		tween.tween_property(self, "rotor_speed", 0, 1.0)
+		tween.tween_property(self, "rotor_speed", 0, 0.0)
 		tween.tween_callback(func():
 			rotors_active = false
 			can_restart_rotor = true
 			GameManager.stop_stopwatch()
-			emit_signal("player_landed")
+			#emit_signal("player_landed")
 		)
 
 

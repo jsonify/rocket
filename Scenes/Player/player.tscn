@@ -1,11 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://pe20ipdc1u1y"]
+[gd_scene load_steps=16 format=3 uid="uid://pe20ipdc1u1y"]
 
 [ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_4oxyg"]
 [ext_resource type="AudioStream" uid="uid://c3f1p2jmrxoyn" path="res://Audio/SFX - Death Explosion.ogg" id="2_4kw30"]
 [ext_resource type="Material" uid="uid://d3jwuhmj6iea2" path="res://ShipRedMaterial.tres" id="2_uly8q"]
 [ext_resource type="AudioStream" uid="uid://bo0g10arlfpjt" path="res://Audio/SFX - Success.ogg" id="3_lyep8"]
 [ext_resource type="AudioStream" uid="uid://bngoqyhjeh8bd" path="res://Audio/SFX - Main engine thrust.ogg" id="4_6sobr"]
-[ext_resource type="PackedScene" uid="uid://dxbk7gey72xj7" path="res://UI/healthbar.tscn" id="6_1v3gc"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_uhnwv"]
 size = Vector3(1, 0.3, 0.5)
@@ -154,22 +153,6 @@ transform = Transform3D(1, 0, 0, 0, 0.972149, 0.234362, 0, -0.234362, 0.972149, 
 current = true
 fov = 60.0
 
-[node name="Healthbar" parent="." instance=ExtResource("6_1v3gc")]
-
-[node name="AddGas" type="Button" parent="."]
-offset_left = 132.0
-offset_top = 96.0
-offset_right = 204.0
-offset_bottom = 127.0
-text = "Add Gas"
-
-[node name="ReduceGas" type="Button" parent="."]
-offset_left = 285.0
-offset_top = 96.0
-offset_right = 387.0
-offset_bottom = 127.0
-text = "Reduce  Gas"
-
 [node name="Hurtbox" type="Area3D" parent="."]
 collision_layer = 8
 collision_mask = 64
@@ -179,6 +162,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0210876, -0.103943, 0)
 shape = SubResource("BoxShape3D_jscb0")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
-[connection signal="pressed" from="AddGas" to="." method="_on_add_gas_pressed"]
-[connection signal="pressed" from="ReduceGas" to="." method="_on_reduce_gas_pressed"]
 [connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]

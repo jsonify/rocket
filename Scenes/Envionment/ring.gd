@@ -1,6 +1,6 @@
 class_name Ring extends Node3D
 
-signal ring_success
+#signal ring_success
 signal ring_failure
 
 @onready var mesh_instance: MeshInstance3D = $MeshInstance3D

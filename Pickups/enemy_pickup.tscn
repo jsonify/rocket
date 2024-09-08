@@ -1,10 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://bv4kawpycj4o3"]
+[gd_scene load_steps=5 format=3 uid="uid://bv4kawpycj4o3"]
 
 [ext_resource type="Texture2D" uid="uid://b3qsmbc8brj0u" path="res://UI/logos/skull-logo.png" id="1_2qqfc"]
 [ext_resource type="Script" path="res://Pickups/enemy_pickup.gd" id="1_pmmpn"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_l7m1l"]
 size = Vector3(1.70117, 1.97266, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2dsjy"]
+size = Vector3(2.1748, 2.22699, 4.89453)
 
 [node name="EnemyPickup" type="Node3D"]
 script = ExtResource("1_pmmpn")
@@ -19,4 +22,12 @@ collision_mask = 8
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
 shape = SubResource("BoxShape3D_l7m1l")
 
+[node name="Hurtbox" type="Area3D" parent="." groups=["enemy"]]
+collision_layer = 64
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0306091, 0)
+shape = SubResource("BoxShape3D_2dsjy")
+
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]

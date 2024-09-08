@@ -1,9 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://bxgkubm0q31kh"]
+[gd_scene load_steps=5 format=3 uid="uid://bxgkubm0q31kh"]
 
 [ext_resource type="Material" uid="uid://bhkds2v5mmxus" path="res://Scenes/Envionment/GroundBrown.tres" id="1_ykpem"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_10ckt"]
-albedo_color = Color(0.618083, 0.335504, 0.0100703, 1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_l4elo"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -28,93 +25,6 @@ collision_layer = 4
 collision_mask = 9
 size = Vector3(100, 8, 5)
 material = ExtResource("1_ykpem")
-
-[node name="BackgroundRock" type="CSGBox3D" parent="."]
-transform = Transform3D(0.782924, -0.447533, -0.432139, 0.593572, 0.745367, 0.303479, 0.186285, -0.494107, 0.849209, -7.84052, 9.35356, -14.2825)
-size = Vector3(6.82244, 18.102, 3.955)
-
-[node name="BackgroundRock2" type="CSGBox3D" parent="."]
-transform = Transform3D(0.547789, -0.49664, 0.673258, 0.494123, 0.841443, 0.218668, -0.675107, 0.212888, 0.706335, 12.054, 3.13761, -14.7091)
-size = Vector3(5.21678, 23.539, 3.955)
-
-[node name="BackgroundRock3" type="CSGBox3D" parent="."]
-transform = Transform3D(0.622127, 0.067372, -0.780012, 0.291682, 0.904621, 0.310776, 0.726553, -0.420858, 0.543139, -45.1243, 8.19058, -15.5708)
-material_override = SubResource("StandardMaterial3D_10ckt")
-size = Vector3(9.17918, 19.2637, 26.3215)
-
-[node name="BackgroundRock4" type="CSGBox3D" parent="."]
-transform = Transform3D(-0.0368433, 0.335289, -0.941395, 0.291682, 0.904621, 0.310776, 0.955805, -0.263138, -0.131126, -27.6137, 13.3398, -11.9789)
-material_override = SubResource("StandardMaterial3D_10ckt")
-size = Vector3(9.17918, 19.2637, 26.3215)
-
-[node name="BackgroundRock5" type="CSGBox3D" parent="."]
-transform = Transform3D(-0.27889, -0.952651, -0.121147, -0.0930397, 0.152364, -0.983936, 0.955805, -0.263138, -0.131126, -8.75606, 13.3398, -18.2647)
-material_override = SubResource("StandardMaterial3D_10ckt")
-size = Vector3(9.17918, 19.2637, 26.3215)
-
-[node name="Wall" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(0.912934, -0.408107, 0, 0.408107, 0.912934, 0, 0, 0, 1, -50.219, 6.41219, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Wall2" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(0.886785, 0.462182, 0, -0.462182, 0.886785, 0, 0, 0, 1, -50.219, 12.7822, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Wall3" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(0.958338, 0.285638, 0, -0.285638, 0.958338, 0, 0, 0, 1, 48.0412, 7.3075, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Wall4" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(0.78176, -0.623579, 0, 0.623579, 0.78176, 0, 0, 0, 1, 48.0412, 13.1331, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(-0.407135, 0.913368, 0, -0.913368, -0.407135, 0, 0, 0, 1, -41.7461, 17.3941, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling2" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(-0.222297, 0.974979, 0, -0.974979, -0.222297, 0, 0, 0, 1, -31.7601, 15.751, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling3" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(0.395385, 0.918515, 0, -0.918515, 0.395385, 0, 0, 0, 1, -21.7272, 15.695, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling4" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(-0.612438, 0.790518, 0, -0.790518, -0.612438, 0, 0, 0, 1, -12.2201, 15.695, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling5" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(0.918881, 0.394535, 0, -0.394535, 0.918881, 0, 0, 0, 1, -6.16943, 15.695, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling6" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(0.918881, 0.394535, 0, -0.394535, 0.918881, 0, 0, 0, 1, -5.61826, 23.506, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling7" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(-0.550874, 0.834588, 0, -0.834588, -0.550874, 0, 0, 0, 1, 0.213058, 27.7588, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling8" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(-0.550874, 0.834588, 0, -0.834588, -0.550874, 0, 0, 0, 1, 7.00246, 21.2678, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling9" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(-0.550874, 0.834588, 0, -0.834588, -0.550874, 0, 0, 0, 1, 15.2841, 16.7912, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling10" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(0.204462, 0.978874, 0, -0.978874, 0.204462, 0, 0, 0, 1, 24.9086, 16.4182, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling11" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(0.204462, 0.978874, 0, -0.978874, 0.204462, 0, 0, 0, 1, 32.5934, 20.5963, 0)
-size = Vector3(4, 10, 4)
-
-[node name="Ceiling12" type="CSGBox3D" parent="." groups=["Hazard"]]
-transform = Transform3D(-0.417788, 0.908544, 0, -0.908544, -0.417788, 0, 0, 0, 1, 42.0687, 19.8502, 0)
-size = Vector3(4, 10, 4)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.984808, -0.111619, 0.133022, 0, 0.766044, 0.642788, -0.173648, -0.633022, 0.754407, 0, 0, 0)

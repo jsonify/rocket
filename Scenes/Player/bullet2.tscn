@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://d3cphciyqabct"]
+
+[ext_resource type="Script" path="res://Scenes/Player/bullet.gd" id="1_274a2"]
+[ext_resource type="PackedScene" uid="uid://ux6ivcx1ovdp" path="res://Particles/booster_particles.tscn" id="2_wsk7a"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_62erg"]
+size = Vector3(0.75, 0.025, 0.025)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5g6h1"]
+albedo_color = Color(1, 0, 0.027451, 1)
+emission_enabled = true
+emission = Color(1, 0.387956, 0.319725, 1)
+emission_energy_multiplier = 5.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_6qpo7"]
+material = SubResource("StandardMaterial3D_5g6h1")
+size = Vector3(0.75, 0.025, 0.025)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kuk1e"]
+size = Vector3(0.75, 0.025, 0.025)
+
+[node name="Bullet" type="CharacterBody3D" groups=["object"]]
+collision_mask = 0
+script = ExtResource("1_274a2")
+speed = 25.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_62erg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_6qpo7")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="BoosterParticles" parent="." instance=ExtResource("2_wsk7a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325562, 0, 0)
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_mask = 68
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_kuk1e")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
