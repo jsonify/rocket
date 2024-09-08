@@ -1,5 +1,8 @@
 class_name Player extends RigidBody3D
 
+signal player_died
+signal player_landed  # New signal for landing
+
 @export_range(750.0, 3500.0) var thrust := 1000.0
 @export var torque_thrust := 100.0
 @export var rotor_speed := 5.0
@@ -11,6 +14,7 @@ class_name Player extends RigidBody3D
 @onready var bullet_spawn: Marker3D = $HelicoptorBody/BulletSpawn
 @onready var camera_mount: Node3D = $CameraMount
 @onready var camera_3d: Camera3D = $CameraMount/Camera3D
+@onready var healthbar: ProgressBar = $Healthbar
 
 var is_transitioning := false
 var rotors_active := false
@@ -20,6 +24,9 @@ var stopwatch_started := false
 var is_flipping := false
 var flip_timer := 0.0
 var is_reversed := false
+
+var gas_level = 100
+var max_gas_level = 100
 
 # Camera variables
 @export_group("Camera")
@@ -40,11 +47,30 @@ const BULLET = preload("res://Scenes/Player/bullet.tscn")
 var can_fire := true
 
 func _ready():
-	initial_rotor_y_rotation = rotor.rotation.y
-	current_fov = zoom_in_fov
-	camera_3d.fov = current_fov
+	gas_level = max_gas_level
+	healthbar.value = max_gas_level
+	
+	if not camera_3d:
+		print("Player: Camera3D node not found")
+	else:
+		print("Player: Camera3D node found")
+		initial_rotor_y_rotation = rotor.rotation.y
+		current_fov = zoom_in_fov
+		camera_3d.fov = current_fov
+		print("Player: Camera FOV set to ", current_fov)
+	
+	# Delay the first camera update to ensure everything is set up
+	call_deferred("initial_camera_setup")
+
+func initial_camera_setup():
+	print("Player: Initial camera setup")
+	if camera_3d and is_inside_tree():
+		update_camera_position()
+	else:
+		print("Player: Camera or player not ready for initial setup")
 
 func _physics_process(delta: float) -> void:
+	healthbar.value = gas_level
 	if rotors_active:
 		rotate_rotors(delta)
 	
@@ -57,6 +83,17 @@ func _physics_process(delta: float) -> void:
 	handle_camera_zoom(delta)
 	update_camera_position()
 
+func _on_add_gas_pressed():
+	if gas_level > 100:
+		gas_level = max_gas_level
+	
+	if gas_level < 100:
+		gas_level += 35
+		
+func _on_reduce_gas_pressed():
+	if gas_level > 0:
+		gas_level -= 5
+
 func check_upside_down():
 	if helicoptor_body.global_transform.basis.y.dot(Vector3.UP) < -0.5:
 		start_flip()
@@ -64,33 +101,24 @@ func check_upside_down():
 func start_flip():
 	is_flipping = true
 	flip_timer = 0.0
+	print("Player: Starting flip")
 
 func apply_flip_force(delta: float):
 	flip_timer += delta
 	if flip_timer > 1.0:
-		# Calculate how upright the helicopter is
 		var up_dot = helicoptor_body.global_transform.basis.y.dot(Vector3.UP)
 		
-		# Only apply force if we're not close to upright
 		if up_dot < 0.9:
-			# Calculate flip force based on how far from upright we are
 			var flip_strength = flip_force * (1.0 - up_dot) * 0.5
-			
-			# Determine flip direction
 			var flip_direction = 1 if up_dot < 0 else -1
-			
-			# Apply the calculated torque
 			apply_torque(Vector3.BACK * flip_strength * flip_direction)
 		else:
-			# If we're close to upright, stop flipping
 			is_flipping = false
 			flip_timer = 0.0
-			
-			# Stabilize the helicopter
 			angular_velocity = Vector3.ZERO
+			print("Player: Flip completed")
 
 func handle_input(delta):
-	# thrust
 	if Input.is_action_pressed("thrust"):
 		if can_restart_rotor and not rotors_active:
 			start_rotor()
@@ -98,23 +126,18 @@ func handle_input(delta):
 			start_stopwatch()
 		apply_central_force(basis.y * delta * thrust)
 	
-	# reverse direction
 	if Input.is_action_just_pressed("reverse_direction"):
 		reverse_helicopter()
 	
-	# backwards
 	if Input.is_action_pressed("backwards"):
-		apply_torque(Vector3(0.0, 0.0, torque_thrust * delta ))
+		apply_torque(Vector3(0.0, 0.0, torque_thrust * delta))
 
-	# forward
 	if Input.is_action_pressed("forward"):
 		apply_torque(Vector3(0.0, 0.0, -torque_thrust * delta))
 
-	# fire bullet
 	if Input.is_action_pressed("fire") and can_fire:
 		shoot()
 		
-	# restart level
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
 
@@ -126,17 +149,20 @@ func reverse_helicopter():
 	var target_rotation := PI if is_reversed else 0.0
 	var tween = create_tween()
 	tween.tween_property(helicoptor_body, "rotation:y", target_rotation, 0.5)
+	print("Player: Helicopter reversed")
 
 func start_rotor():
 	rotors_active = true
 	can_restart_rotor = false
 	var tween = create_tween()
 	tween.tween_property(self, "rotor_speed", 25.0, 0.5)
+	print("Player: Rotors started")
 
 func start_stopwatch():
 	if not stopwatch_started:
 		GameManager.start_stopwatch()
 		stopwatch_started = true
+		print("Player: Stopwatch started")
 
 func shoot():
 	var bullet_instance = BULLET.instantiate()
@@ -146,6 +172,7 @@ func shoot():
 	can_fire = false
 	await get_tree().create_timer(fire_rate).timeout
 	can_fire = true
+	print("Player: Bullet fired")
 
 func update_camera_position():
 	camera_offset = Vector3(0, camera_height, camera_distance)
@@ -188,7 +215,7 @@ func _on_body_entered(body: Node) -> void:
 			land()
 
 func crash_sequence():
-	print("YOU LOST IT!")
+	print("Player: Crashed!")
 	helicoptor_body.visible = false
 	set_process(false)
 	is_transitioning = true
@@ -197,7 +224,7 @@ func crash_sequence():
 	tween.tween_callback(get_tree().reload_current_scene)
 
 func complete_level(next_level_file: String):
-	print("Level Complete")
+	print("Player: Level Complete")
 	set_process(false)
 	GameManager.stop_stopwatch()
 	land()
@@ -215,7 +242,7 @@ func auto_next_level(input: bool, next_level_file: String = ""):
 	var tween = create_tween()
 	tween.tween_interval(2)
 	tween.tween_callback(get_tree().change_scene_to_file.bind(next_level_file))
-		
+	print("Player: Auto-advancing to next level")
 
 func land():
 	if rotor.rotation.y != 0:
@@ -224,4 +251,8 @@ func land():
 		tween.tween_callback(func():
 			rotors_active = false
 			can_restart_rotor = true
+			print("Player: Helicopter landed. Rotors Active: ", rotors_active)
+			GameManager.stop_stopwatch()
+			print("Player: Stopwatch stopped")
+			emit_signal("player_landed")
 		)

@@ -13,3 +13,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.52335, 1.06173, 0)
 
 [node name="Ring" parent="." index="4" instance=ExtResource("4_my788")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.6954, 3.92224, -0.0115947)
+
+[node name="Ring2" parent="." index="5" instance=ExtResource("4_my788")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.5932, 3.92224, -0.0115947)
+
+[node name="Ring3" parent="." index="6" instance=ExtResource("4_my788")]
+transform = Transform3D(0.999449, 0.0331901, 0, -0.0331901, 0.999449, 0, 0, 0, 1, 34.2028, 7.48401, -0.0115947)
+
+[node name="Ring4" parent="." index="7" instance=ExtResource("4_my788")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.3197, 2.10346, -0.0115947)
+
+[node name="Ring5" parent="." index="8" instance=ExtResource("4_my788")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.8699, 3.92224, -0.0115947)
+
+[node name="Ring6" parent="." index="9" instance=ExtResource("4_my788")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76.4514, 6.80197, -0.0115947)

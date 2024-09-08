@@ -9,25 +9,9 @@
 scale = Vector2(2, 2)
 transform = Transform2D(2, 0, 0, 2, 0, 0)
 
-[node name="RingsCounter" parent="UI/Control" index="0"]
-anchors_preset = -1
-anchor_left = 0.476264
-anchor_top = 0.0215679
-anchor_right = 0.476264
-anchor_bottom = 0.0215679
-offset_left = -161.656
-offset_top = 20.024
-offset_right = 6.34387
-offset_bottom = 60.024
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Label" parent="UI/Control/RingsCounter" index="1"]
-text = "10 / 10
-"
-
 [node name="Level" parent="." instance=ExtResource("2_dc3ew")]
 
 [editable path="UI"]
-[editable path="UI/Control/RingsCounter"]
-[editable path="UI/Control/TimeCounter"]
+[editable path="UI/Control/RingCounter"]
+[editable path="UI/Control/Stopwatch"]
+[editable path="UI/Control/ScoreLabel"]
