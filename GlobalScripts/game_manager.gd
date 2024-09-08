@@ -11,34 +11,31 @@ var stopwatch_time: float = 0.0
 var stopwatch_running: bool = false
 var current_score: int = 0
 
-func _ready():
-	print("GameManager: Ready")
-
 func _process(delta):
 	if stopwatch_running:
 		stopwatch_time += delta
 		emit_signal("stopwatch_updated", stopwatch_time)
-		print("GameManager: Stopwatch updated - ", stopwatch_time)
+		#print("GameManager: Stopwatch updated - ", stopwatch_time)
 
 func increment_ring_count():
 	ring_count += 1
 	emit_signal("ring_count_changed", ring_count)
-	print("GameManager: Ring count changed - ", ring_count)
+	#print("GameManager: Ring count changed - ", ring_count)
 	update_score()
 
 func set_total_rings(count: int):
 	total_rings = count
-	print("GameManager: Total rings set - ", total_rings)
+	#print("GameManager: Total rings set - ", total_rings)
 
 func start_stopwatch():
 	stopwatch_running = true
-	print("GameManager: Stopwatch started")
+	#print("GameManager: Stopwatch started")
 
 func stop_stopwatch():
 	stopwatch_running = false
 	update_score()
 	emit_signal("game_finished")
-	print("GameManager: Stopwatch stopped, game finished")
+	#print("GameManager: Stopwatch stopped, game finished")
 
 func update_score():
 	var ring_score = ring_count * 1000
@@ -57,4 +54,4 @@ func reset_game_state():
 	emit_signal("ring_count_changed", ring_count)
 	emit_signal("stopwatch_updated", stopwatch_time)
 	emit_signal("score_updated", current_score)
-	print("GameManager: Game state reset")
+	#print("GameManager: Game state reset")

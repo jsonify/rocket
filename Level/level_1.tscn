@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://blngh1dpkf08t"]
+[gd_scene load_steps=6 format=3 uid="uid://blngh1dpkf08t"]
 
 [ext_resource type="PackedScene" uid="uid://qrneqqlh28dg" path="res://Level/level.tscn" id="1_bp5h0"]
 [ext_resource type="Script" path="res://Level/level_1.gd" id="2_4ti38"]
 [ext_resource type="PackedScene" uid="uid://pe20ipdc1u1y" path="res://Scenes/Player/player.tscn" id="3_b7akx"]
 [ext_resource type="PackedScene" uid="uid://gv6ocd6jq7rp" path="res://Pickups/GasPickup/gas_pickup.tscn" id="4_cmp23"]
+[ext_resource type="PackedScene" uid="uid://bv4kawpycj4o3" path="res://Pickups/enemy_pickup.tscn" id="5_qyi7j"]
 
 [node name="Level" instance=ExtResource("1_bp5h0")]
 script = ExtResource("2_4ti38")
@@ -13,3 +14,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.52335, 1.06173, 0)
 
 [node name="GasPickup" parent="." index="4" instance=ExtResource("4_cmp23")]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 8.98531, 3.73028, 0.0419068)
+
+[node name="EnemyPickup" parent="." index="5" instance=ExtResource("5_qyi7j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.92838, 4.34034, 0.0419068)

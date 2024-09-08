@@ -57,13 +57,11 @@ func _ready():
 		initial_rotor_y_rotation = rotor.rotation.y
 		current_fov = zoom_in_fov
 		camera_3d.fov = current_fov
-		print("Player: Camera FOV set to ", current_fov)
 	
 	# Delay the first camera update to ensure everything is set up
 	call_deferred("initial_camera_setup")
 
 func initial_camera_setup():
-	print("Player: Initial camera setup")
 	if camera_3d and is_inside_tree():
 		update_camera_position()
 	else:
@@ -101,7 +99,6 @@ func check_upside_down():
 func start_flip():
 	is_flipping = true
 	flip_timer = 0.0
-	print("Player: Starting flip")
 
 func apply_flip_force(delta: float):
 	flip_timer += delta
@@ -116,7 +113,6 @@ func apply_flip_force(delta: float):
 			is_flipping = false
 			flip_timer = 0.0
 			angular_velocity = Vector3.ZERO
-			print("Player: Flip completed")
 
 func handle_input(delta):
 	if Input.is_action_pressed("thrust"):
@@ -149,20 +145,17 @@ func reverse_helicopter():
 	var target_rotation := PI if is_reversed else 0.0
 	var tween = create_tween()
 	tween.tween_property(helicoptor_body, "rotation:y", target_rotation, 0.5)
-	print("Player: Helicopter reversed")
 
 func start_rotor():
 	rotors_active = true
 	can_restart_rotor = false
 	var tween = create_tween()
 	tween.tween_property(self, "rotor_speed", 25.0, 0.5)
-	print("Player: Rotors started")
 
 func start_stopwatch():
 	if not stopwatch_started:
 		GameManager.start_stopwatch()
 		stopwatch_started = true
-		print("Player: Stopwatch started")
 
 func shoot():
 	var bullet_instance = BULLET.instantiate()
@@ -235,14 +228,12 @@ func auto_next_level(input: bool, next_level_file: String = ""):
 		return
 		
 	if input and next_level_file.is_empty():
-		print("Error: next_level_file is required when input is true")
 		return
 		
 	is_transitioning = true
 	var tween = create_tween()
 	tween.tween_interval(2)
 	tween.tween_callback(get_tree().change_scene_to_file.bind(next_level_file))
-	print("Player: Auto-advancing to next level")
 
 func land():
 	if rotor.rotation.y != 0:
@@ -251,9 +242,7 @@ func land():
 		tween.tween_callback(func():
 			rotors_active = false
 			can_restart_rotor = true
-			print("Player: Helicopter landed. Rotors Active: ", rotors_active)
 			GameManager.stop_stopwatch()
-			print("Player: Stopwatch stopped")
 			emit_signal("player_landed")
 		)
 
