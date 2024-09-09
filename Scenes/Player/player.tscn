@@ -149,7 +149,7 @@ stream = ExtResource("4_6sobr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.83053)
 
 [node name="Camera3D" type="Camera3D" parent="CameraMount"]
-transform = Transform3D(1, 0, 0, 0, 0.972149, 0.234362, 0, -0.234362, 0.972149, 0, 0.667677, 0)
+transform = Transform3D(1, 0, 0, 0, 0.971961, 0.235142, 0, -0.235142, 0.971961, 0, 0.667677, 0)
 current = true
 fov = 60.0
 

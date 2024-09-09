@@ -46,29 +46,34 @@ var camera_offset := Vector3(0, 2, 5)
 @export var fire_rate := 0.2
 var can_fire := true
 
+var has_crashed := false
+var crash_camera_transform: Transform3D
+var initial_camera_rotation: Basis
+var initial_camera_mount_transform: Transform3D
+
 func _ready():
 	gas_level = GasManager.current_gas_level
+	initial_camera_mount_transform = camera_mount.transform
 	
-	#healthbar.value = max_gas_level
-	
-	if not camera_3d:
-		print("Player: Camera3D node not found")
-	else:
+	if camera_3d:
 		print("Player: Camera3D node found")
 		initial_rotor_y_rotation = rotor.rotation.y
 		current_fov = zoom_in_fov
 		camera_3d.fov = current_fov
+	else:
+		print("Player: Camera3D node not found")
 	
-	# Delay the first camera update to ensure everything is set up
 	call_deferred("initial_camera_setup")
+
 
 func initial_camera_setup():
 	if camera_3d and is_inside_tree():
 		update_camera_position()
-	else:
-		print("Player: Camera or player not ready for initial setup")
 
 func _physics_process(delta: float) -> void:
+	print("processing camera_3d.rotation.z: ", camera_3d.rotation.z)
+	if has_crashed:
+		return
 	gas_level = GasManager.current_gas_level
 	if rotors_active:
 		rotate_rotors(delta)
@@ -124,8 +129,7 @@ func handle_input(delta):
 	if Input.is_action_pressed("fire") and can_fire:
 		shoot()
 		
-	if Input.is_action_just_pressed("restart"):
-		get_tree().reload_current_scene()
+
 
 func handle_thrust(delta):
 	if gas_level > 0:
@@ -137,7 +141,6 @@ func handle_thrust(delta):
 		apply_central_force(basis.y * delta * thrust)
 	else:
 		crash_sequence()
-	
 	
 
 func rotate_rotors(delta: float):
@@ -178,10 +181,16 @@ func _on_bullet_hit_enemy(enemy):
 func update_camera_position():
 	if not is_inside_tree() or not camera_3d.is_inside_tree():
 		return
+	
+	if has_crashed:
+		return  # Don't update camera if crashed
+	
+	camera_mount.transform = camera_mount.transform.interpolate_with(initial_camera_mount_transform, 0.1)
+	
 	camera_offset = Vector3(0, camera_height, camera_distance)
-	var target_position = global_position + camera_offset
+	var target_position = camera_mount.to_global(camera_offset)
 	camera_3d.global_position = camera_3d.global_position.lerp(target_position, 0.1)
-	camera_3d.look_at_from_position(camera_3d.global_position, global_position, Vector3.UP)
+	camera_3d.look_at(global_position, Vector3.UP)
 
 func handle_camera_zoom(delta):
 	var new_target_fov = zoom_out_fov if position.y > zoom_height_threshold else zoom_in_fov
@@ -214,52 +223,33 @@ func _on_body_entered(body: Node) -> void:
 			complete_level()
 		_ when body.is_in_group("Hazard"):
 			crash_sequence()
-		_ when body.is_in_group("SafeLanding"):
-			land()
 
 func crash_sequence():
+	if has_crashed:
+		return  # Prevent multiple calls
+	
+	has_crashed = true
 	set_physics_process(false)
-	set_process(false)
+	RigidBody3D.FREEZE_MODE_STATIC  # Freeze the player's physics
+
+	# Freeze the camera mount and camera
+	camera_mount.set_as_top_level(true)
+	camera_3d.set_as_top_level(true)
+
+	print("Camera rotation at crash (radians): ", camera_3d.rotation)
+	print("Camera rotation at crash (degrees): ", camera_3d.rotation_degrees)
+
 	var explode_instance = EXPLOSION.instantiate() as Node3D
 	explode_instance.global_transform = global_transform
 	get_tree().root.add_child(explode_instance)
 	
 	helicoptor_body.visible = false
-	is_transitioning = true
-	var tween = create_tween()
-	tween.tween_interval(2.5)
-	tween.tween_callback(get_tree().reload_current_scene)
+	complete_level()
+
 
 func complete_level():
-	print("Player: Level Complete")
 	set_process(false)
 	GameManager.stop_stopwatch()
-	land()
-	auto_next_level(false)
-
-func auto_next_level(input: bool, next_level_file: String = ""):
-	if not input:
-		return
-		
-	if input and next_level_file.is_empty():
-		return
-		
-	is_transitioning = true
-	var tween = create_tween()
-	tween.tween_interval(2)
-	tween.tween_callback(get_tree().change_scene_to_file.bind(next_level_file))
-
-func land():
-	if rotor.rotation.y != 0:
-		var tween = create_tween()
-		tween.tween_property(self, "rotor_speed", 0, 0.0)
-		tween.tween_callback(func():
-			rotors_active = false
-			can_restart_rotor = true
-			GameManager.stop_stopwatch()
-			#emit_signal("player_landed")
-		)
-
 
 func _on_hurtbox_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Enemy"):

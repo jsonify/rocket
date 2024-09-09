@@ -32,7 +32,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.75873, 1.15437, 0.0419068)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.0091, -3.98562, 0)
 mesh = SubResource("BoxMesh_mu7ms")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Ground2/MeshInstance3D" index="0"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground2/MeshInstance3D" index="0" groups=["Hazard"]]
 collision_layer = 4
 collision_mask = 9
 
