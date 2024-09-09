@@ -45,39 +45,33 @@ var fov_target := zoom_in_fov
 var camera_offset := Vector3(0, 2, 5)
 @export var fire_rate := 0.2
 var can_fire := true
+var has_crashed := false
 
 func _ready():
 	gas_level = GasManager.current_gas_level
 	
-	#healthbar.value = max_gas_level
-	
-	if not camera_3d:
-		print("Player: Camera3D node not found")
-	else:
-		print("Player: Camera3D node found")
-		initial_rotor_y_rotation = rotor.rotation.y
-		current_fov = zoom_in_fov
-		camera_3d.fov = current_fov
-	
-	# Delay the first camera update to ensure everything is set up
+	initial_rotor_y_rotation = rotor.rotation.y
+	current_fov = zoom_in_fov
+	camera_3d.fov = current_fov
+
 	call_deferred("initial_camera_setup")
 
 func initial_camera_setup():
 	if camera_3d and is_inside_tree():
 		update_camera_position()
-	else:
-		print("Player: Camera or player not ready for initial setup")
 
 func _physics_process(delta: float) -> void:
+	if has_crashed:
+		return
 	gas_level = GasManager.current_gas_level
 	if rotors_active:
 		rotate_rotors(delta)
 	
-	if is_flipping:
-		apply_flip_force(delta)
-	else:
-		check_upside_down()
-		handle_input(delta)
+	#if is_flipping:
+		#apply_flip_force(delta)
+	#else:
+		#check_upside_down()
+	handle_input(delta)
 	
 	handle_camera_zoom(delta)
 	update_camera_position()
@@ -86,27 +80,27 @@ func _physics_process(delta: float) -> void:
 		update_camera_position()
 
 
-func check_upside_down():
-	if helicoptor_body.global_transform.basis.y.dot(Vector3.UP) < -0.5:
-		start_flip()
+#func check_upside_down():
+	#if helicoptor_body.global_transform.basis.y.dot(Vector3.UP) < -0.5:
+		#start_flip()
+#
+#func start_flip():
+	#is_flipping = true
+	#flip_timer = 0.0
 
-func start_flip():
-	is_flipping = true
-	flip_timer = 0.0
-
-func apply_flip_force(delta: float):
-	flip_timer += delta
-	if flip_timer > 1.0:
-		var up_dot = helicoptor_body.global_transform.basis.y.dot(Vector3.UP)
-		
-		if up_dot < 0.9:
-			var flip_strength = flip_force * (1.0 - up_dot) * 0.5
-			var flip_direction = 1 if up_dot < 0 else -1
-			apply_torque(Vector3.BACK * flip_strength * flip_direction)
-		else:
-			is_flipping = false
-			flip_timer = 0.0
-			angular_velocity = Vector3.ZERO
+#func apply_flip_force(delta: float):
+	#flip_timer += delta
+	#if flip_timer > 1.0:
+		#var up_dot = helicoptor_body.global_transform.basis.y.dot(Vector3.UP)
+		#
+		#if up_dot < 0.9:
+			#var flip_strength = flip_force * (1.0 - up_dot) * 0.5
+			#var flip_direction = 1 if up_dot < 0 else -1
+			#apply_torque(Vector3.BACK * flip_strength * flip_direction)
+		#else:
+			#is_flipping = false
+			#flip_timer = 0.0
+			#angular_velocity = Vector3.ZERO
 
 func handle_input(delta):
 	if Input.is_action_pressed("thrust"):
@@ -124,8 +118,8 @@ func handle_input(delta):
 	if Input.is_action_pressed("fire") and can_fire:
 		shoot()
 		
-	if Input.is_action_just_pressed("restart"):
-		get_tree().reload_current_scene()
+	#if Input.is_action_just_pressed("restart"):
+		#get_tree().reload_current_scene()
 
 func handle_thrust(delta):
 	if gas_level > 0:
@@ -178,10 +172,17 @@ func _on_bullet_hit_enemy(enemy):
 func update_camera_position():
 	if not is_inside_tree() or not camera_3d.is_inside_tree():
 		return
+	
+	if has_crashed:
+		return 
+	
 	camera_offset = Vector3(0, camera_height, camera_distance)
 	var target_position = global_position + camera_offset
 	camera_3d.global_position = camera_3d.global_position.lerp(target_position, 0.1)
 	camera_3d.look_at_from_position(camera_3d.global_position, global_position, Vector3.UP)
+	#var target_position = camera_mount.to_global(camera_offset)
+	#camera_3d.global_position = camera_3d.global_position.lerp(target_position, 0.1)
+	#camera_3d.look_at(global_position, Vector3.UP)
 
 func handle_camera_zoom(delta):
 	var new_target_fov = zoom_out_fov if position.y > zoom_height_threshold else zoom_in_fov
@@ -218,24 +219,37 @@ func _on_body_entered(body: Node) -> void:
 			land()
 
 func crash_sequence():
+	if has_crashed:
+		return  # Prevent multiple calls
+
+	has_crashed = true
 	set_physics_process(false)
-	set_process(false)
+	#set_process(false)
+	RigidBody3D.FREEZE_MODE_STATIC  # Freeze the player's physics
+
+	# Freeze the camera mount and camera
+	camera_mount.set_as_top_level(true)
+	camera_3d.set_as_top_level(true)
+
+	print("Camera rotation at crash (radians): ", camera_3d.rotation)
+	print("Camera rotation at crash (degrees): ", camera_3d.rotation_degrees)
 	var explode_instance = EXPLOSION.instantiate() as Node3D
 	explode_instance.global_transform = global_transform
 	get_tree().root.add_child(explode_instance)
 	
 	helicoptor_body.visible = false
-	is_transitioning = true
-	var tween = create_tween()
-	tween.tween_interval(2.5)
-	tween.tween_callback(get_tree().reload_current_scene)
+	#is_transitioning = true
+	#var tween = create_tween()
+	#tween.tween_interval(2.5)
+	#tween.tween_callback(get_tree().reload_current_scene)
+	complete_level()
 
 func complete_level():
-	print("Player: Level Complete")
+	#print("Player: Level Complete")
 	set_process(false)
 	GameManager.stop_stopwatch()
-	land()
-	auto_next_level(false)
+	#land()
+	#auto_next_level(false)
 
 func auto_next_level(input: bool, next_level_file: String = ""):
 	if not input:
