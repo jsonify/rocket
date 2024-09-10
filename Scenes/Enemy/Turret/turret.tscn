@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3 uid="uid://b2fghb5xceqh6"]
+
+[ext_resource type="Script" path="res://Scenes/Enemy/Turret/turret.gd" id="1_67llc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nxr7c"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_aqesl"]
+size = Vector3(0.25, 0.6, 0.25)
+
+[sub_resource type="SphereMesh" id="SphereMesh_phs54"]
+radius = 0.3
+height = 0.3
+is_hemisphere = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_af4nj"]
+top_radius = 0.05
+bottom_radius = 0.025
+height = 0.25
+
+[node name="Turret" type="Node3D"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+script = ExtResource("1_67llc")
+body_path = NodePath("Body")
+head_path = NodePath("Body/Head")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_nxr7c")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.192894, 0)
+mesh = SubResource("BoxMesh_aqesl")
+skeleton = NodePath("")
+
+[node name="Cap2" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.288135, 0)
+mesh = SubResource("SphereMesh_phs54")
+skeleton = NodePath("")
+
+[node name="Head" type="Node3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.369144, 0)
+
+[node name="Barrel1" type="MeshInstance3D" parent="Body/Head"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.2, -0.000247955, 0.28)
+mesh = SubResource("CylinderMesh_af4nj")
+skeleton = NodePath("")
+
+[node name="Barrel2" type="MeshInstance3D" parent="Body/Head"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.2, -0.000247955, 0.28)
+mesh = SubResource("CylinderMesh_af4nj")
+skeleton = NodePath("")

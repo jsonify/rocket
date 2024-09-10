@@ -5,7 +5,7 @@ signal gas_level_changed
 var max_gas_level := 100.0
 var current_gas_level : float
 
-var debug := true
+var debug := false
 var gas_reduction_factor := 0.1
 
 func _ready() -> void:

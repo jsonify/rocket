@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://blngh1dpkf08t"]
+[gd_scene load_steps=10 format=3 uid="uid://blngh1dpkf08t"]
 
 [ext_resource type="PackedScene" uid="uid://qrneqqlh28dg" path="res://Level/level.tscn" id="1_bp5h0"]
 [ext_resource type="Script" path="res://Level/level_1.gd" id="2_4ti38"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://gv6ocd6jq7rp" path="res://Pickups/GasPickup/gas_pickup.tscn" id="4_cmp23"]
 [ext_resource type="PackedScene" uid="uid://bv4kawpycj4o3" path="res://Pickups/enemy_pickup.tscn" id="5_qyi7j"]
 [ext_resource type="Material" uid="uid://bhkds2v5mmxus" path="res://Scenes/Envionment/GroundBrown.tres" id="6_yjucp"]
+[ext_resource type="PackedScene" uid="uid://b2fghb5xceqh6" path="res://Scenes/Enemy/Turret/turret.tscn" id="7_1fexm"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_mu7ms"]
 material = ExtResource("6_yjucp")
@@ -38,3 +39,9 @@ collision_mask = 9
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground2/MeshInstance3D/StaticBody3D" index="0"]
 shape = SubResource("ConcavePolygonShape3D_62x5y")
+
+[node name="Turret" parent="." index="5" instance=ExtResource("7_1fexm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.6739, 0.455456, 0)
+target_path = NodePath("../Player")
+
+[editable path="Turret"]
