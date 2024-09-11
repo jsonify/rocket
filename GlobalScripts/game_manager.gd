@@ -36,7 +36,6 @@ func update_score():
 	var time_factor = 1.0 if stopwatch_time == 0 else 1.0 + (0.1 / stopwatch_time)
 	current_score = int(enemy_score * time_factor)
 	emit_signal("score_updated", current_score)
-	print("GameManager: Score updated - ", current_score)
 
 func reset_game_state():
 	enemy_count = 0

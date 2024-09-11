@@ -16,7 +16,7 @@ var is_player_in_range: bool = false
 var can_fire: bool = true
 
 func _process(delta: float) -> void:
-	if target:
+	if is_instance_valid(target):
 		# Rotate the body (Y-axis rotation)
 		var body_direction = global_position.direction_to(target.global_position)
 		var body_target_rotation = atan2(body_direction.x, body_direction.z)
@@ -31,6 +31,9 @@ func _process(delta: float) -> void:
 		fire()
 
 func fire():
+	if not is_instance_valid(target):
+		return
+	
 	var turret_bullet_instance = TURRET_BULLET.instantiate()
 	get_tree().current_scene.add_child(turret_bullet_instance)
 	turret_bullet_instance.global_transform = marker_3d.global_transform
@@ -46,16 +49,12 @@ func fire():
 	can_fire = true
 
 func _on_danger_area_3d_body_entered(body: Node3D) -> void:
-	print("Body entered danger area: ", body.name)
 	if body == target:
 		is_player_in_range = true
-		print("Player entered danger area")
 
 func _on_danger_area_3d_body_exited(body: Node3D) -> void:
-	print("Body exited danger area: ", body.name)
 	if body == target:
-		is_player_in_range = false
-		print("Player exited danger area")
+		is_player_in_range = false	
 
 func _on_hurt_box_body_entered(body: Node3D) -> void:
 	if body is Bullet:

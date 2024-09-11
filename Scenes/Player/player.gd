@@ -66,41 +66,13 @@ func _physics_process(delta: float) -> void:
 	gas_level = GasManager.current_gas_level
 	if rotors_active:
 		rotate_rotors(delta)
-	
-	#if is_flipping:
-		#apply_flip_force(delta)
-	#else:
-		#check_upside_down()
+
 	handle_input(delta)
-	
 	handle_camera_zoom(delta)
 	update_camera_position()
 	
 	if is_inside_tree():
 		update_camera_position()
-
-
-#func check_upside_down():
-	#if helicoptor_body.global_transform.basis.y.dot(Vector3.UP) < -0.5:
-		#start_flip()
-#
-#func start_flip():
-	#is_flipping = true
-	#flip_timer = 0.0
-
-#func apply_flip_force(delta: float):
-	#flip_timer += delta
-	#if flip_timer > 1.0:
-		#var up_dot = helicoptor_body.global_transform.basis.y.dot(Vector3.UP)
-		#
-		#if up_dot < 0.9:
-			#var flip_strength = flip_force * (1.0 - up_dot) * 0.5
-			#var flip_direction = 1 if up_dot < 0 else -1
-			#apply_torque(Vector3.BACK * flip_strength * flip_direction)
-		#else:
-			#is_flipping = false
-			#flip_timer = 0.0
-			#angular_velocity = Vector3.ZERO
 
 func handle_input(delta):
 	if Input.is_action_pressed("thrust"):
@@ -117,9 +89,7 @@ func handle_input(delta):
 
 	if Input.is_action_pressed("fire") and can_fire:
 		shoot()
-		
-	#if Input.is_action_just_pressed("restart"):
-		#get_tree().reload_current_scene()
+
 
 func handle_thrust(delta):
 	if gas_level > 0:
@@ -159,8 +129,6 @@ func shoot():
 	bullet_instance.global_transform = bullet_spawn.global_transform
 	get_tree().root.add_child(bullet_instance)
 	
-	#bullet_instance.enemy_hit.connect(_on_bullet_hit_enemy)
-	
 	apply_central_impulse(-bullet_spawn.global_transform.basis.z * 5)
 	can_fire = false
 	await get_tree().create_timer(fire_rate).timeout
@@ -180,9 +148,6 @@ func update_camera_position():
 	var target_position = global_position + camera_offset
 	camera_3d.global_position = camera_3d.global_position.lerp(target_position, 0.1)
 	camera_3d.look_at_from_position(camera_3d.global_position, global_position, Vector3.UP)
-	#var target_position = camera_mount.to_global(camera_offset)
-	#camera_3d.global_position = camera_3d.global_position.lerp(target_position, 0.1)
-	#camera_3d.look_at(global_position, Vector3.UP)
 
 func handle_camera_zoom(delta):
 	var new_target_fov = zoom_out_fov if position.y > zoom_height_threshold else zoom_in_fov
@@ -224,15 +189,12 @@ func crash_sequence():
 
 	has_crashed = true
 	set_physics_process(false)
-	#set_process(false)
 	RigidBody3D.FREEZE_MODE_STATIC  # Freeze the player's physics
 
 	# Freeze the camera mount and camera
 	camera_mount.set_as_top_level(true)
 	camera_3d.set_as_top_level(true)
 
-	print("Camera rotation at crash (radians): ", camera_3d.rotation)
-	print("Camera rotation at crash (degrees): ", camera_3d.rotation_degrees)
 	var explode_instance = EXPLOSION.instantiate() as Node3D
 	explode_instance.global_transform = global_transform
 	get_tree().root.add_child(explode_instance)
@@ -245,11 +207,9 @@ func crash_sequence():
 	complete_level()
 
 func complete_level():
-	#print("Player: Level Complete")
 	set_process(false)
 	GameManager.stop_stopwatch()
-	#land()
-	#auto_next_level(false)
+
 
 func auto_next_level(input: bool, next_level_file: String = ""):
 	if not input:
