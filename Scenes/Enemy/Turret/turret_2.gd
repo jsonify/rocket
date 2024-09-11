@@ -15,6 +15,11 @@ const EXPLOSION = preload("res://Scenes/explosion.tscn")
 var is_player_in_range: bool = false
 var can_fire: bool = true
 
+func _ready():
+	# Connect to the player's death signal
+	if target and target.has_signal("player_died"):
+		target.player_died.connect(_on_player_died)
+
 func _process(delta: float) -> void:
 	if is_instance_valid(target):
 		# Rotate the body (Y-axis rotation)
@@ -63,3 +68,12 @@ func _on_hurt_box_body_entered(body: Node3D) -> void:
 		var explode_instance = EXPLOSION.instantiate() as Node3D
 		explode_instance.global_transform = global_transform
 		get_tree().root.add_child(explode_instance)
+
+func _on_player_died():
+	# Handle player death
+	# For example, stop firing and tracking
+	set_process(false)
+	can_fire = false
+	is_player_in_range = false
+	# Optionally, you can disable or hide the turret
+	# visible = false

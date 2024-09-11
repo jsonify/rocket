@@ -1,6 +1,6 @@
 class_name Player extends RigidBody3D
 
-#signal player_died
+signal player_died
 #signal player_landed  # New signal for landing
 
 @export_range(750.0, 3500.0) var thrust := 1000.0
@@ -200,6 +200,7 @@ func crash_sequence():
 	get_tree().root.add_child(explode_instance)
 	
 	helicoptor_body.visible = false
+	player_died.emit()
 	#is_transitioning = true
 	#var tween = create_tween()
 	#tween.tween_interval(2.5)
