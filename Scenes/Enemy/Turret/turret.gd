@@ -1,5 +1,4 @@
 class_name Turret extends Node3D
-
 ################################
 # EXPORT PARAMS
 ################################
@@ -15,7 +14,6 @@ class_name Turret extends Node3D
 # constraints
 @export var min_elevation: float = -10
 @export var max_elevation: float = 60
-
 ################################
 # PARAMS
 ################################
@@ -26,6 +24,9 @@ class_name Turret extends Node3D
 # movement
 @onready var elevation_speed: float = deg_to_rad(elevation_speed_deg)
 @onready var rotation_speed: float = deg_to_rad(rotation_speed_deg)
+
+const EXPLOSION = preload("res://Scenes/explosion.tscn")
+
 # target calculation
 var ttc: float
 var current_target: Vector3
@@ -42,7 +43,6 @@ func _ready() -> void:
 	# test if got valid target
 	if target == null or not target.has_method("get_linear_velocity"):
 		active = false  # Changed from == to =
-
 func _process(delta: float) -> void:
 	# if not active do nothing
 	if not active:
@@ -52,13 +52,11 @@ func _process(delta: float) -> void:
 	# move
 	_rotate(delta)
 	_elevate(delta)
-
 ################################
 # MAIN FUNCTIONS
 ################################
 func update_target_location() -> void:  # Removed asterisks
 	current_target = target.global_transform.origin
-
 func _rotate(delta: float) -> void:
 	# get displacement
 	var y_target = get_local_y()  # Removed asterisks
@@ -66,7 +64,6 @@ func _rotate(delta: float) -> void:
 	var final_y = sign(y_target) * min(rotation_speed * delta, abs(-y_target))
 	# rotate body
 	body.rotate_y(final_y)
-
 func _elevate(delta: float) -> void:
 	# get displacement
 	var x_target = get_global_x()  # Removed asterisks
@@ -80,7 +77,6 @@ func _elevate(delta: float) -> void:
 		head.rotation_degrees.x,
 		min_elevation, max_elevation
 	)
-
 ################################
 # HELPER FUNCTIONS
 ################################
@@ -92,7 +88,6 @@ func get_ttc() -> float:  # Removed asterisks
 	var a = target_velocity.dot(target_velocity) - muzzle_velocity * muzzle_velocity
 	var b = 2 * target_velocity.dot(to_target)
 	var c = to_target.dot(to_target)
-
 	# don't divide by zero
 	if a == 0:
 		return 0.0
@@ -100,7 +95,6 @@ func get_ttc() -> float:  # Removed asterisks
 	var d = b * b - 4 * a * c
 	if d < 0:
 		return 0.0
-
 	var p = -b / (2 * a)
 	var q = sqrt(d) / (2 * a)
 	# solve
@@ -114,12 +108,19 @@ func get_ttc() -> float:  # Removed asterisks
 		t = t2
 	# make sure t is possitive
 	return max(0.0, t)
-
 func get_local_y() -> float:  # Removed asterisks
 	var local_target = head.to_local(current_target)
 	var y_angle = Vector3.FORWARD.angle_to(local_target * Vector3(1, 0, 1))
 	return y_angle * sign(local_target.x)
-
 func get_global_x() -> float:  # Removed asterisks
 	var local_target = current_target - head.global_transform.origin
 	return (local_target * Vector3(1, 0, 1)).angle_to(local_target) * sign(local_target.y)
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if body is Bullet:
+		GameManager.increment_enemy_count()
+		queue_free()
+		var explode_instance = EXPLOSION.instantiate() as Node3D
+		explode_instance.global_transform = global_transform
+		get_tree().root.add_child(explode_instance)
