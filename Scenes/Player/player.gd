@@ -31,8 +31,8 @@ var gas_level : float
 
 # Camera variables
 @export_group("Camera")
-@export var zoom_in_fov := 60.0
-@export var zoom_out_fov := 100.0
+@export var zoom_in_fov := 45.0
+@export var zoom_out_fov := 80.0
 @export var zoom_duration := 1.0
 @export var zoom_height_threshold := 2.0
 @export var camera_distance := 10.0
