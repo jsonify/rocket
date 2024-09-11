@@ -1,21 +1,29 @@
-[gd_scene load_steps=6 format=3 uid="uid://dlqfpsm5c4g5x"]
+[gd_scene load_steps=9 format=3 uid="uid://dlqfpsm5c4g5x"]
 
 [ext_resource type="Script" path="res://Scenes/Enemy/Turret/turret_2.gd" id="1_f77ys"]
+[ext_resource type="Material" uid="uid://cdl74i16ct5do" path="res://MuzzleBlackMaterial.tres" id="2_rs0c6"]
+[ext_resource type="Material" uid="uid://cas7y5r4tomjo" path="res://TurretRedMaterial.tres" id="3_whu8j"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_aqesl"]
+material = ExtResource("2_rs0c6")
 size = Vector3(0.25, 0.6, 0.25)
 
 [sub_resource type="SphereMesh" id="SphereMesh_phs54"]
+material = ExtResource("3_whu8j")
 radius = 0.3
 height = 0.3
 is_hemisphere = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_af4nj"]
-top_radius = 0.05
+material = ExtResource("2_rs0c6")
+top_radius = 0.08
 bottom_radius = 0.025
-height = 0.25
+height = 0.5
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nxr7c"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_i0547"]
+radius = 5.14741
 
 [node name="Turret" type="Node3D"]
 script = ExtResource("1_f77ys")
@@ -27,6 +35,7 @@ skeleton = NodePath("")
 
 [node name="Cap" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.288135, 0)
+material_override = ExtResource("3_whu8j")
 mesh = SubResource("SphereMesh_phs54")
 skeleton = NodePath("")
 
@@ -34,25 +43,27 @@ skeleton = NodePath("")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.369144, 0)
 
 [node name="Barrel1" type="MeshInstance3D" parent="Body/Head"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.2, -0.000247955, 0.28)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.28)
 mesh = SubResource("CylinderMesh_af4nj")
 skeleton = NodePath("")
 
 [node name="Marker3D" type="Marker3D" parent="Body/Head/Barrel1"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 3.55271e-15, 1, 0, 0.157135, 0)
 
-[node name="Barrel2" type="MeshInstance3D" parent="Body/Head"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.2, -0.000247955, 0.28)
-mesh = SubResource("CylinderMesh_af4nj")
-skeleton = NodePath("")
-
-[node name="Marker3D2" type="Marker3D" parent="Body/Head/Barrel2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 1.06581e-14, 1, 0, 0.157, 0)
-
-[node name="Area3D" type="Area3D" parent="."]
+[node name="HurtBox" type="Area3D" parent="."]
 collision_layer = 64
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtBox"]
 shape = SubResource("BoxShape3D_nxr7c")
 
-[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[node name="DangerArea3D" type="Area3D" parent="."]
+collision_layer = 64
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DangerArea3D"]
+shape = SubResource("SphereShape3D_i0547")
+
+[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
+[connection signal="body_entered" from="DangerArea3D" to="." method="_on_danger_area_3d_body_entered"]
+[connection signal="body_exited" from="DangerArea3D" to="." method="_on_danger_area_3d_body_exited"]

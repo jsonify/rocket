@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://b13mxgk0rofdt"]
+
+[ext_resource type="Script" path="res://Scenes/Enemy/Turret/turret_bullet.gd" id="1_b0nss"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t231s"]
+albedo_color = Color(0.89, 0.103833, 0, 1)
+emission_enabled = true
+emission = Color(0.890196, 0.101961, 0, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_penlw"]
+material = SubResource("StandardMaterial3D_t231s")
+radius = 0.06
+height = 0.1
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8fojk"]
+radius = 0.031766
+
+[node name="TurretBullet" type="CharacterBody3D"]
+script = ExtResource("1_b0nss")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_penlw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_8fojk")
+
+[node name="Marker3D2" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 1.06581e-14, 1, 0, 0.157, 0)
