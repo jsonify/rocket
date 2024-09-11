@@ -72,7 +72,7 @@ fire={
 3d_physics/layer_2="Target"
 3d_physics/layer_3="Ground"
 3d_physics/layer_4="Helicopter"
-3d_physics/layer_5="Ring"
+3d_physics/layer_5="Entry"
 3d_physics/layer_6="Pickup"
 3d_physics/layer_7="Enemy"
 
