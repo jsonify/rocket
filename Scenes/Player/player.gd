@@ -14,7 +14,9 @@ const EXPLOSION = preload("res://Scenes/explosion.tscn")
 @export_group("Camera")
 @export var zoom_in_fov := 45.0
 @export var zoom_out_fov := 105.0
-@export var zoom_duration := 1.5
+@export var zoom_in_duration := 1.0  # Duration for zooming in
+@export var zoom_out_duration := 2.0  # Duration for zooming out (slower)
+#@export var zoom_duration := 1.5
 @export var camera_distance := 10.0
 @export var camera_height := 5.0
 
@@ -129,10 +131,25 @@ func update_camera_position():
 
 func update_camera_zoom(delta):
 	if current_fov != target_fov:
-		print("Zooming camera. Current FOV: ", current_fov, " Target FOV: ", target_fov)
-		var new_fov = lerp(current_fov, target_fov, delta / zoom_duration)
+		#print("Zooming camera. Current FOV: ", current_fov, " Target FOV: ", target_fov)
+		
+		var zoom_in_timer := get_tree().create_timer(2).timeout
+		var is_zooming_out = target_fov > current_fov
+		var zoom_duration = zoom_out_duration if is_zooming_out else zoom_in_duration
+		
+		# Calculate the interpolation factor
+		var t = delta / zoom_duration
+		
+		# Clamp t to ensure we don't overshoot
+		t = clamp(t, 0, 1)
+		
+		# Use smoothstep for a more natural easing
+		t = smoothstep(0, 1, t)
+		
+		var new_fov = lerp(current_fov, target_fov, t)
 		camera_3d.fov = new_fov
 		current_fov = new_fov
+		
 		if abs(current_fov - target_fov) < 0.01:
 			current_fov = target_fov
 			camera_3d.fov = current_fov
@@ -142,6 +159,13 @@ func zoom_camera(new_target_fov: float):
 	if fov_tween:
 		fov_tween.kill()
 	fov_tween = create_tween()
+	fov_tween.set_trans(Tween.TRANS_CUBIC)
+	fov_tween.set_ease(Tween.EASE_IN_OUT)
+	
+	# Determine if we're zooming in or out
+	var is_zooming_out = new_target_fov > current_fov
+	var zoom_duration = zoom_out_duration if is_zooming_out else zoom_in_duration
+	
 	fov_tween.tween_property(camera_3d, "fov", new_target_fov, zoom_duration)
 	fov_tween.tween_callback(func(): 
 		current_fov = new_target_fov

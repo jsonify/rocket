@@ -1,15 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://blngh1dpkf08t"]
+[gd_scene load_steps=10 format=3 uid="uid://blngh1dpkf08t"]
 
 [ext_resource type="PackedScene" uid="uid://qrneqqlh28dg" path="res://Level/level.tscn" id="1_bp5h0"]
 [ext_resource type="Script" path="res://Level/level_1.gd" id="2_4ti38"]
-[ext_resource type="PackedScene" uid="uid://d2nlyctgolplt" path="res://Scenes/Envionment/small-building.blend" id="3_1ki21"]
 [ext_resource type="PackedScene" uid="uid://pe20ipdc1u1y" path="res://Scenes/Player/player.tscn" id="3_b7akx"]
+[ext_resource type="PackedScene" uid="uid://ctg5dxybmyos3" path="res://Scenes/Envionment/ground.blend" id="3_vv2af"]
 [ext_resource type="PackedScene" uid="uid://gv6ocd6jq7rp" path="res://Pickups/GasPickup/gas_pickup.tscn" id="4_cmp23"]
-[ext_resource type="PackedScene" uid="uid://dlqfpsm5c4g5x" path="res://Scenes/Enemy/Turret/turret2.tscn" id="6_r5clu"]
 [ext_resource type="Material" uid="uid://bhkds2v5mmxus" path="res://Scenes/Envionment/GroundBrown.tres" id="6_yjucp"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_hcbie"]
-size = Vector3(35, 2, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_mu7ms"]
 material = ExtResource("6_yjucp")
@@ -18,27 +14,21 @@ size = Vector3(100, 8, 5)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_62x5y"]
 data = PackedVector3Array(-50, 4, 2.5, 50, 4, 2.5, -50, -4, 2.5, 50, 4, 2.5, 50, -4, 2.5, -50, -4, 2.5, 50, 4, -2.5, -50, 4, -2.5, 50, -4, -2.5, -50, 4, -2.5, -50, -4, -2.5, 50, -4, -2.5, 50, 4, 2.5, 50, 4, -2.5, 50, -4, 2.5, 50, 4, -2.5, 50, -4, -2.5, 50, -4, 2.5, -50, 4, -2.5, -50, 4, 2.5, -50, -4, -2.5, -50, 4, 2.5, -50, -4, 2.5, -50, -4, -2.5, 50, 4, 2.5, -50, 4, 2.5, 50, 4, -2.5, -50, 4, 2.5, -50, 4, -2.5, 50, 4, -2.5, -50, -4, 2.5, 50, -4, 2.5, -50, -4, -2.5, 50, -4, 2.5, 50, -4, -2.5, -50, -4, -2.5)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_hcbie"]
+size = Vector3(35, 2, 1)
+
 [node name="Level1" instance=ExtResource("1_bp5h0")]
 script = ExtResource("2_4ti38")
 
-[node name="small-building2" parent="." index="0" instance=ExtResource("3_1ki21")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+[node name="ground" parent="." index="0" instance=ExtResource("3_vv2af")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.56901)
 
-[node name="EntryArea3D1" type="Area3D" parent="small-building2" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.9407, 0)
-collision_layer = 16
-collision_mask = 8
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="small-building2/EntryArea3D1" index="0"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
-shape = SubResource("BoxShape3D_hcbie")
-
-[node name="StaticBody3D" parent="small-building2/Residential Buildings 005" index="0"]
+[node name="StaticBody3D" parent="ground/SetGround" index="0"]
 collision_layer = 4
 collision_mask = 9
 
 [node name="Player" parent="." index="2" groups=["Player"] instance=ExtResource("3_b7akx")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 7.52606, 35.0087, -1.90735e-06)
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -0.989252, 8.36956, -1.90735e-06)
 
 [node name="GasPickup" parent="." index="3" instance=ExtResource("4_cmp23")]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 8.98531, 3.73028, 0.0419068)
@@ -57,24 +47,19 @@ collision_mask = 9
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground2/MeshInstance3D/StaticBody3D" index="0"]
 shape = SubResource("ConcavePolygonShape3D_62x5y")
 
-[node name="Turrets" type="Node3D" parent="." index="5"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 6.23041, 25.6451, -1.90735e-06)
-
-[node name="Turret" parent="Turrets" index="0" node_paths=PackedStringArray("target") instance=ExtResource("6_r5clu")]
-target = NodePath("../../Player")
-
-[node name="Turret2" parent="Turrets" index="1" node_paths=PackedStringArray("target") instance=ExtResource("6_r5clu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.74742, 0, -5.89878e-07)
-target = NodePath("../../Player")
-
-[node name="Turret3" parent="Turrets" index="2" node_paths=PackedStringArray("target") instance=ExtResource("6_r5clu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.6567, 0, -1.28133e-06)
-target = NodePath("../../Player")
-
-[node name="GasPickup2" parent="." index="6" instance=ExtResource("4_cmp23")]
+[node name="GasPickup2" parent="." index="5" instance=ExtResource("4_cmp23")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.7028, 26.6759, 0.0605943)
 
-[connection signal="body_entered" from="small-building2/EntryArea3D1" to="." method="_on_entry_area_3d_1_body_entered"]
-[connection signal="body_exited" from="small-building2/EntryArea3D1" to="." method="_on_entry_area_3d_1_body_exited"]
+[node name="EntryArea3D1" type="Area3D" parent="." index="6"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 26.9407, 0)
+collision_layer = 16
+collision_mask = 8
 
-[editable path="small-building2"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EntryArea3D1" index="0"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+shape = SubResource("BoxShape3D_hcbie")
+
+[connection signal="body_entered" from="EntryArea3D1" to="." method="_on_entry_area_3d_1_body_entered"]
+[connection signal="body_exited" from="EntryArea3D1" to="." method="_on_entry_area_3d_1_body_exited"]
+
+[editable path="ground"]
